@@ -1,0 +1,10 @@
+[Unit]
+Description=PAPN en direct (lecture seule, local)
+
+[Service]
+ExecStart=/usr/bin/python3 -I %h/laboratoire-veille/direct/papn_direct.py
+Restart=on-failure
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=default.target
