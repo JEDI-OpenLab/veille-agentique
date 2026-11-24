@@ -8,7 +8,8 @@ H = str(Path.home() / "hermes-agent/.hermes/bin/hermes")
 verrou = open(L / ".office.lock", "w")
 try: fcntl.flock(verrou, fcntl.LOCK_EX | fcntl.LOCK_NB)
 except OSError: sys.exit("Un passage est déjà en cours.")
-D = L / "dossiers" / datetime.now().strftime("%Y-%m-%d-%Hh%M"); D.mkdir(parents=True)
+ESSAI = "--veille-seule" in sys.argv  # arrêt après Nestor, sans publier ni marquer les adresses
+D = L / ("essais" if ESSAI else "dossiers") / datetime.now().strftime("%Y-%m-%d-%Hh%M"); D.mkdir(parents=True)
 
 def log(*a):
     s = datetime.now().strftime("%H:%M:%S ") + " ".join(map(str, a)); print(s, flush=True)
@@ -52,9 +53,14 @@ def texte(url):
         return norm(subprocess.run(["pdftotext", "-", "-"], input=b, capture_output=True).stdout.decode("utf8", "replace"))
     s = b.decode("utf8", "replace"); s = re.sub(r"(?is)<(script|style)\b.*?</\1>", " ", s)
     return norm(re.sub(r"(?s)<[^>]+>", " ", s))
-def cle(u): return re.sub(r"[?#].*$", "", u.strip()).rstrip("/").replace("http://", "https://").replace("https://www.", "https://")
+def cle(u):
+    """Adresse comparable : sans ancre ni paramètres de suivi, mais avec ceux qui désignent la page."""
+    b, _, q = u.strip().partition("#")[0].partition("?")
+    q = "&".join(sorted(x for x in q.split("&") if x and not re.match(r"(utm_\w+|lang|fbclid|gclid|xtor|at_\w+)(=|$)", x)))
+    return (re.sub(r"^https?://(www\.)?", "https://", b).rstrip("/") + ("?" + q if q else ""))
 
 vus = {cle(u) for u in (L / "deja_vu.txt").read_text().splitlines() if u.strip()}
+AGE_MAX = 60  # jours, hors revues et archives de recherche
 try:
     from recherche import chercher
     pub, pannes = chercher()
@@ -62,9 +68,40 @@ except Exception as e: pub, pannes = [], [str(e)[:150]]
 pub = [x for x in pub if cle(x["url"]) not in vus]
 resumes_hal = {cle(x["url"]): norm(x["titre"] + " " + x["resume"]) for x in pub if x["source"] == "HAL"}
 (D / "recherche.json").write_text(json.dumps(pub, ensure_ascii=False, indent=1)); log(len(pub), "publications HAL et arXiv", *pannes)
-f = tache("nestor", "Veille du jour", "Propose 4 à 8 ressources récentes. recherche.json contient des publications récentes de HAL et d'arXiv : lis-le d'abord et retiens-en une ou deux si elles concernent nos sujets, en gardant leur url. Ouvre la page arXiv ; pour HAL, ne tente pas d'ouvrir la page, elle refuse la lecture automatique : appuie-toi sur le champ resume. Ne force rien. Une prépublication est signalée comme telle. JSON : liste d'objets {titre, url, source, date, thematique, resume, interet}. Liste vide si rien de nouveau.", "fiches.json", 25)
-f = [x for x in f if isinstance(x, dict) and x.get("url") and cle(x["url"]) not in vus]
+try:
+    from flux import collecter, jour, tournee
+    actu, pannes = collecter(); sites = tournee()
+except Exception as e:
+    actu, pannes, sites = [], [str(e)[:150]], []
+    def jour(x):
+        try: return datetime.strptime(str(x)[:10], "%Y-%m-%d").date()
+        except ValueError: return None
+actu = [x for x in actu if cle(x["url"]) not in vus]
+(D / "actualites.json").write_text(json.dumps([{k: v for k, v in x.items() if k != "age_max"} for x in actu], ensure_ascii=False, indent=1)); log(len(actu), "articles dans les flux", *pannes)
+f = tache("nestor", "Veille du jour", "Propose 4 à 8 ressources récentes. Lis actualites.json (flux de nos sources) et recherche.json (HAL et arXiv) : choisis-y d'abord, en reprenant l'adresse exacte et la date indiquée. Ouvre la page de chaque ressource retenue ; pour HAL, ne tente pas d'ouvrir la page, elle refuse la lecture automatique : appuie-toi sur le champ resume. Va ensuite voir les nouveautés de : " + ", ".join(f"{n} ({u})" for n, u, *_ in sites) + ". Varie les sources, deux au plus par site, et les thèmes : évaluation, compétences, inclusion, formation d'ingénieurs, et pas seulement l'IA. Une ressource de plus de 60 jours ou sans date affichée sera écartée. Une prépublication est signalée comme telle. Ne force rien. JSON : liste d'objets {titre, url, source, date (AAAA-MM-JJ), thematique, resume, interet}. Liste vide si rien de nouveau.", "fiches.json", 25)
+sures = {cle(x["url"]): (x["date"], x["age_max"]) for x in actu} | {cle(x["url"]): (x.get("depot") or x["date"], AGE_MAX) for x in pub}
+affichees = {cle(x["url"]): str(x["date"]) for x in actu + pub}
+def motif(x, compte):
+    """Pourquoi écarter une fiche, ou None. La date des flux et des interfaces prime sur celle de Nestor."""
+    if not isinstance(x, dict) or not re.match(r"https?://", str(x.get("url", ""))): return "adresse absente"
+    k = cle(x["url"]); site = k.split("/")[2]
+    if k in vus: return "déjà vue"
+    if k in compte["pages"]: return "en double"
+    d, age = sures.get(k, (x.get("date"), AGE_MAX)); d = jour(d)
+    if not d: return "date inconnue"
+    n = (datetime.now().date() - d).days
+    if n > age: return f"trop ancienne ({n} jours)"
+    if n < -1: return "date à venir"
+    if compte["sites"].get(site, 0) >= 2: return "déjà deux ressources de ce site"
+    x["date_verifiee"] = k in sures
+    if x["date_verifiee"]: x["date"] = affichees[k]
+    compte["pages"].add(k); compte["sites"][site] = compte["sites"].get(site, 0) + 1
+compte, gardees, ecartees = {"pages": set(), "sites": {}}, [], []
+for x in f if isinstance(f, list) else []:
+    m = motif(x, compte); (ecartees if m else gardees).append({**x, "motif": m} if m and isinstance(x, dict) else x)
+f = gardees; (D / "ecartees.json").write_text(json.dumps(ecartees, ensure_ascii=False, indent=1)); log(len(ecartees), "fiche(s) écartée(s)", *[str(x.get("motif")) for x in ecartees if isinstance(x, dict)])
 (D / "fiches.json").write_text(json.dumps(f, ensure_ascii=False, indent=1)); log(len(f), "fiches nouvelles")
+if ESSAI: fin(0, f"Essai de veille : {len(f)} fiche(s) gardée(s), {len(ecartees)} écartée(s).")
 if not f: fin(0, "Aucune ressource nouvelle.")
 s = tache("moneypenny", "Choix du sujet", "Lis fiches.json et choisis. JSON : {retenu: bool, angle, urls: [1 à 3 adresses tirées de fiches.json], raison}.", "selection.json", 10)
 urls = [u for u in s.get("urls", []) if cle(u) in {cle(x["url"]) for x in f}]

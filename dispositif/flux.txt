@@ -1,0 +1,26 @@
+# Une source par ligne : Nom | adresse du flux | âge maximal en jours
+# Pour ajouter une source, ajoutez une ligne. Un # en tête la suspend.
+The Conversation, éducation | https://theconversation.com/fr/education/articles.atom | 60
+The Conversation, IA | https://theconversation.com/topics/intelligence-artificielle-ia-22176/articles.atom | 60
+Thot Cursus | https://cursus.edu/fr/rss | 60
+Framablog | https://framablog.org/feed/ | 60
+Café pédagogique | https://www.cafepedagogique.net/feed/ | 60
+Innovation pédagogique | https://www.innovation-pedagogique.fr/spip.php?page=backend | 60
+Educavox | https://www.educavox.fr/?format=feed&type=rss | 60
+École branchée | https://ecolebranchee.com/feed/ | 60
+Prim à bord | https://primabord.eduscol.education.fr/spip.php?page=backend | 60
+CRE, Université de Montréal | https://www.lecre.umontreal.ca/feed/ | 60
+Le Collimateur, UQAM | https://collimateur.uqam.ca/feed/ | 60
+Pédagogie, Université du Québec | https://pedagogie.uquebec.ca/rss.xml | 60
+Éduveille, IFÉ | https://eduveille.hypotheses.org/feed | 60
+Institut français de l'éducation | https://ife.ens-lyon.fr/rss.xml | 60
+Commission des titres d'ingénieur | https://www.cti-commission.fr/feed | 60
+Ministère de l'enseignement supérieur | https://www.enseignementsup-recherche.gouv.fr/fr/rss.xml | 60
+Distances et médiations des savoirs | https://journals.openedition.org/dms/backend?format=rssdocuments | 180
+RIPES | https://journals.openedition.org/ripes/backend?format=rssdocuments | 180
+Revue française de pédagogie | https://journals.openedition.org/rfp/backend?format=rssdocuments | 180
+Éducation et socialisation | https://journals.openedition.org/edso/backend?format=rssdocuments | 180
+Recherches en éducation | https://journals.openedition.org/ree/backend?format=rssdocuments | 180
+Questions vives | https://journals.openedition.org/questionsvives/backend?format=rssdocuments | 180
+Tréma | https://journals.openedition.org/trema/backend?format=rssdocuments | 180
+Alsic | https://journals.openedition.org/alsic/backend?format=rssdocuments | 180

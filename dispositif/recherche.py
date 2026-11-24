@@ -14,7 +14,7 @@ def hal():
     q = ('("intelligence artificielle" OR "artificial intelligence" OR "IA générative" OR "generative AI" OR "pédagogie universitaire" OR "numérique éducatif") '
          'AND ("enseignement supérieur" OR "higher education" OR université OR étudiants OR "engineering education" OR pédagogie)')
     depuis = (datetime.now(timezone.utc) - timedelta(days=JOURS)).strftime("%Y-%m-%dT00:00:00Z")
-    p = [("q", q), ("fq", "domainAllCode_s:shs.edu"), ("fq", f"submittedDate_tdate:[{depuis} TO *]"), ("rows", MAX), ("sort", "submittedDate_tdate desc"),
+    p = [("q", q), ("fq", "domainAllCode_s:shs.edu"), ("fq", f"submittedDate_tdate:[{depuis} TO *]"), ("fq", f"producedDateY_i:[{datetime.now().year - 1} TO *]"), ("rows", MAX), ("sort", "submittedDate_tdate desc"),
          ("fl", "title_s,uri_s,submittedDate_s,producedDate_s,docType_s,abstract_s,fileMain_s"), ("wt", "json")]
     d = json.loads(lire("https://api.archives-ouvertes.fr/search/?" + urllib.parse.urlencode(p)))
     return [{"titre": net((x.get("title_s") or [""])[0]), "url": x["uri_s"], "texte_integral": x.get("fileMain_s"), "source": "HAL", "type": x.get("docType_s"),

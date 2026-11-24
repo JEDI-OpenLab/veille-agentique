@@ -1,4 +1,4 @@
-# Sources de veille prioritaires — Nestor
+# Sources de veille prioritaires (les flux et la tournée sont dans `flux.txt` et `tournee.txt`) — Nestor
 
 ## 1. Revues et portails scientifiques (SHS, Éducation, Pédagogie)
 - Cairn.info (Sciences de l'éducation, pédagogie universitaire, numérique éducatif) : https://www.cairn.info

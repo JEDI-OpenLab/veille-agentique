@@ -1,0 +1,11 @@
+# Sites sans flux : deux sont confiés à Nestor chaque jour, à tour de rôle.
+Université Laval, enseigner | https://www.enseigner.ulaval.ca
+Université de Montréal, CPU | https://cpu.umontreal.ca
+Université de Sherbrooke, SSF | https://www.usherbrooke.ca/ssf
+Polytechnique Montréal, BAIP | https://www.polymtl.ca/baip/
+UQAM, Carrefour technopédagogique | https://carrefour.uqam.ca
+Éduscol | https://eduscol.education.fr
+UNESCO, IA et éducation | https://www.unesco.org/fr/digital-education/artificial-intelligence
+AIPU | https://www.aipu-internationale.org
+Cairn | https://www.cairn.info
+CDEFI | https://www.cdefi.fr
