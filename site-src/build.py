@@ -8,7 +8,7 @@ PAGES = [("index", "Accueil"), ("circuit", "L’équipe et le circuit"), ("consi
          ("incidents", "Ce qui a raté"), ("modeles", "Les modèles"), ("protocole", "Protocole"), ("refaire", "Refaire"), ("technique", "Technique")]
 DESC = "Veiller et contredire : une expérimentation pédagogique de veille par cinq agents d’IA, avec des modèles servis par ILaaS et Albert. JEDI-OpenLab, Centrale Lille."
 DISPO = S.parent / "dispositif"
-EQUIPE = [("nestor", "Nestor", "Cherche"), ("jarvis", "Jarvis", "Choisit"), ("r2d2", "R2-D2", "Vérifie"), ("watson", "Watson", "Écrit"), ("alfred", "Alfred", "Conteste")]
+EQUIPE = [("nestor", "Nestor", "Cherche"), ("jarvis", "Jarvis", "Choisit"), ("r2d2", "R2-D2", "Vérifie"), ("watson", "Watson", "Écrit"), ("alfred", "Alfred", "Conteste"), ("moneypenny", "Moneypenny", "Résume la semaine"), ("hedwige", "Hedwige", "Met en page le courrier")]
 
 def texte(n):
     """Texte d'un ordre de mission ; les parties calculées apparaissent entre ‹ ›."""
@@ -16,12 +16,13 @@ def texte(n):
     if isinstance(n, ast.JoinedStr): return "".join(texte(x) for x in n.values)
     if isinstance(n, ast.FormattedValue): return {"n": "‹n›", "L": "‹dossier commun›", "D": "‹dossier du jour›"}.get(ast.unparse(n.value), "‹valeur›")
     if isinstance(n, ast.BinOp): return texte(n.left) + texte(n.right)
-    if isinstance(n, ast.Name): return {"objections": " ‹à partir de la version 2 : corriger selon la revue précédente, en traitant chaque objection majeure›"}.get(n.id, "‹valeur›")
+    if isinstance(n, ast.Name): return {"suite": " ‹à partir de la version 2 : corriger selon la revue précédente, sans ajouter de fait›", "objections": " ‹à partir de la version 2 : corriger selon la revue précédente, en traitant chaque objection majeure›"}.get(n.id, "‹valeur›")
     return "‹adresses retenues›"
 
 def consignes(page):
     missions = {}
-    for n in ast.walk(ast.parse((DISPO / "office.py").read_text())):
+    noeuds = [n for f in ("office.py", "recap.py") for n in ast.walk(ast.parse((DISPO / f).read_text()))]
+    for n in noeuds:
         if isinstance(n, ast.Call) and getattr(n.func, "id", "") == "tache":
             missions.setdefault(n.args[0].value, []).append((n.lineno, texte(n.args[1]), texte(n.args[2])))
     para = lambda t: "".join(f"<p>{html.escape(x)}</p>" for x in t.strip().splitlines() if x.strip())

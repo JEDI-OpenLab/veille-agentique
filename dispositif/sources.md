@@ -21,3 +21,6 @@
 - Educavox / Thot Cursus (outils numériques, formation, pédagogie) : https://cursus.edu
 - UNESCO — IA et éducation : https://www.unesco.org/fr/digital-education/artificial-intelligence
 - Framasoft / Logiciels libres & communs numériques éducatifs : https://framablog.org
+
+## 4. Recherche, par interface
+- HAL et arXiv sont interrogés automatiquement avant chaque passage (`recherche.py`) ; les résultats sont dans `recherche.json`.

@@ -71,6 +71,7 @@ def create_draft(title: str, html_content: str, excerpt: str = "", tags: list[st
                 "id": created["id"],
                 "title": created["title"],
                 "status": created["status"],
+                "url": created.get("url"),
                 "editor_url": f"{api_url}/ghost/#/posts/{created['id']}"
             }, ensure_ascii=False))
     except urllib.error.HTTPError as e:

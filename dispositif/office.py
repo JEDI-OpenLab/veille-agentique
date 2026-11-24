@@ -55,7 +55,14 @@ def texte(url):
 def cle(u): return re.sub(r"[?#].*$", "", u.strip()).rstrip("/").replace("http://", "https://").replace("https://www.", "https://")
 
 vus = {cle(u) for u in (L / "deja_vu.txt").read_text().splitlines() if u.strip()}
-f = tache("nestor", "Veille du jour", "Propose 4 à 8 ressources récentes. JSON : liste d'objets {titre, url, source, date, thematique, resume, interet}. Liste vide si rien de nouveau.", "fiches.json", 25)
+try:
+    from recherche import chercher
+    pub, pannes = chercher()
+except Exception as e: pub, pannes = [], [str(e)[:150]]
+pub = [x for x in pub if cle(x["url"]) not in vus]
+resumes_hal = {cle(x["url"]): norm(x["titre"] + " " + x["resume"]) for x in pub if x["source"] == "HAL"}
+(D / "recherche.json").write_text(json.dumps(pub, ensure_ascii=False, indent=1)); log(len(pub), "publications HAL et arXiv", *pannes)
+f = tache("nestor", "Veille du jour", "Propose 4 à 8 ressources récentes. recherche.json contient des publications récentes de HAL et d'arXiv : lis-le d'abord et retiens-en une ou deux si elles concernent nos sujets, en gardant leur url. Ouvre la page arXiv ; pour HAL, ne tente pas d'ouvrir la page, elle refuse la lecture automatique : appuie-toi sur le champ resume. Ne force rien. Une prépublication est signalée comme telle. JSON : liste d'objets {titre, url, source, date, thematique, resume, interet}. Liste vide si rien de nouveau.", "fiches.json", 25)
 f = [x for x in f if isinstance(x, dict) and x.get("url") and cle(x["url"]) not in vus]
 (D / "fiches.json").write_text(json.dumps(f, ensure_ascii=False, indent=1)); log(len(f), "fiches nouvelles")
 if not f: fin(0, "Aucune ressource nouvelle.")
@@ -63,10 +70,10 @@ s = tache("jarvis", "Choix du sujet", "Lis fiches.json et choisis. JSON : {reten
 urls = [u for u in s.get("urls", []) if cle(u) in {cle(x["url"]) for x in f}]
 with open(L / "deja_vu.txt", "a") as o: o.write("".join("\n" + x["url"] for x in f))
 if not s.get("retenu") or not urls: fin(0, "Jarvis n'a rien retenu : " + str(s.get("raison")))
-v = tache("r2d2", "Vérification scientifique", "Sources retenues : " + ", ".join(urls) + ". JSON : {affirmations: [{texte, url, extrait}], methode: [{url, type, limites}], ecarte: [{quoi, pourquoi}]}. 4 à 12 affirmations.", "verification.json", 25)
+v = tache("r2d2", "Vérification scientifique", "Sources retenues : " + ", ".join(urls) + ". Pour une adresse HAL, lis seulement son champ resume dans recherche.json, n'ouvre pas la page, et note dans methode que seul le résumé a été lu. JSON : {affirmations: [{texte, url, extrait}], methode: [{url, type, limites}], ecarte: [{quoi, pourquoi}]}. 4 à 12 affirmations.", "verification.json", 25)
 cache, ok, ko = {}, [], []
 for a in v.get("affirmations", []):
-    u = a.get("url", ""); e = norm(a.get("extrait", "")); cache.setdefault(u, texte(u) if cle(u) in {cle(x) for x in urls} else "")
+    u = a.get("url", ""); e = norm(a.get("extrait", "")); cache.setdefault(u, resumes_hal[cle(u)] if cle(u) in resumes_hal else texte(u) if cle(u) in {cle(x) for x in urls} else "")
     (ok if len(e.split()) >= 6 and e in cache[u] else ko).append(a)
 log(len(ok), "extraits retrouvés,", len(ko), "écartés")
 (D / "valide.json").write_text(json.dumps({"angle": s.get("angle"), "affirmations": ok, "methode": v.get("methode")}, ensure_ascii=False, indent=1))
