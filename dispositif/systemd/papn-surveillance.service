@@ -1,0 +1,7 @@
+[Unit]
+Description=PAPN : surveillance sans IA
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/laboratoire-veille
+ExecStart=/usr/bin/python3 %h/laboratoire-veille/surveiller.py

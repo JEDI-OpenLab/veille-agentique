@@ -1,0 +1,9 @@
+[Unit]
+Description=PAPN : surveillance, jours ouvres a 11 h
+
+[Timer]
+OnCalendar=Mon..Fri 11:00:00 Europe/Paris
+Persistent=true
+
+[Install]
+WantedBy=timers.target

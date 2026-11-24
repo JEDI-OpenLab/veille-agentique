@@ -129,7 +129,7 @@ cache = {"t": 0, "v": b"{}"}
 def etat():
     if time.time() - cache["t"] > 4:
         actif = service("office-veille.service", "office-essai.service"); ds = sorted((d for d in DOS.glob("*") if d.is_dir() and NOM.match(d.name)), reverse=True)[:40] if DOS.exists() else []
-        x = {"maintenant": datetime.now().strftime("%H:%M:%S"), "actif": actif, "prochain": prochain("office-veille.timer"), "recap": recap(), "prochain_recap": prochain("papn-recap.timer"), "prochain_mail": prochain("papn-mail.timer", False), "dernier": dossier(ds[0], True, actif) if ds else None, "historique": [dossier(d) for d in ds]}
+        x = {"surveillance": lire(DOS.parent, "etat.json"), "maintenant": datetime.now().strftime("%H:%M:%S"), "actif": actif, "prochain": prochain("office-veille.timer"), "recap": recap(), "prochain_recap": prochain("papn-recap.timer"), "prochain_mail": prochain("papn-mail.timer", False), "dernier": dossier(ds[0], True, actif) if ds else None, "historique": [dossier(d) for d in ds]}
         if x["dernier"] and x["historique"]: x["historique"][0]["etat"] = x["dernier"]["etat"]
         cache.update(t=time.time(), v=json.dumps(x, ensure_ascii=False).encode())
     return cache["v"]

@@ -9,7 +9,16 @@ C = configparser.ConfigParser(); C.read(os.environ.get("PAPN_MAIL_CONFIG", "/etc
 DEPART, ETAT = Path(c["depart"]), Path(c["etat"])
 DEST = [x.strip() for x in c["destinataires"].split(",") if x.strip()]
 assert 1 <= len(DEST) <= 10 and all(re.fullmatch(r"[^@\s,;<>]+@[^@\s,;<>]+", x) for x in DEST), "destinataires invalides"
-NOM = re.compile(r"\d{4}-S\d\d\.json")
+def alerte(d):
+    """Message d'alerte : objet fixe, texte seul, au destinataire prévu pour les alertes."""
+    pts = d["points"][:20]; assert pts
+    m = EmailMessage(); m["Subject"], m["From"], m["To"] = "[PAPN] Surveillance : problème à voir", c["expediteur"], ALERTE
+    m.set_content("\n".join(["Contrôle du " + court(d["quand"], 20), ""] + [f"- {'PROBLÈME' if p['niveau'] == 'probleme' else 'À voir'} : {court(p['nom'], 80)} : {court(p['detail'], 300)}" for p in pts]
+                             + ["", "Détail : vue « PAPN en direct ».", "", "Message d'un script de surveillance, sans IA. Un par jour au plus."])); return m
+ALERTE = c.get("destinataire_alerte", "").strip()
+NOM_ALERTE = re.compile(r"alerte-\d{4}-\d\d-\d\d\.json")
+MODE_ALERTE = "--alertes" in sys.argv
+NOM = NOM_ALERTE if MODE_ALERTE else re.compile(r"\d{4}-S\d\d\.json")
 
 def court(x, n):
     assert isinstance(x, str) and 0 < len(x) <= n, "texte absent ou trop long"; return x
@@ -62,12 +71,16 @@ def message(d):
     m = EmailMessage(); m["Subject"], m["From"], m["To"] = objet, c["expediteur"], ", ".join(DEST)
     m.set_content("\n".join(T + ["", "", "-- "] + sig_t + [""] + pied)); m.add_alternative(page, subtype="html"); return m
 
+if MODE_ALERTE and not re.fullmatch(r"[^@\s,;<>]+@[^@\s,;<>]+", ALERTE): sys.exit("destinataire_alerte absent ou invalide")
 envoi = "--envoyer" in sys.argv and "--html" not in sys.argv
 for f in sorted(DEPART.glob("*.json")):
-    if not NOM.fullmatch(f.name) or f.is_symlink() or f.stat().st_size > 200_000: print("ignoré", f.name); continue
+    if NOM_ALERTE.fullmatch(f.name) and not MODE_ALERTE: continue
+    if not NOM.fullmatch(f.name) or f.is_symlink() or f.stat().st_size > 200_000:
+        if not MODE_ALERTE: print("ignoré", f.name)
+        continue
     trace = ETAT / (f.stem + ".envoye")
     if trace.exists(): continue
-    try: m = message(json.loads(f.read_text()))
+    try: m = (alerte if MODE_ALERTE else message)(json.loads(f.read_text()))
     except Exception as e: print("refusé", f.name, e); continue
     if "--html" in sys.argv: print(m.get_body(("html",)).get_content()); continue
     if not envoi: print(f"APERÇU {f.name}\nÀ : {m['To']}\nObjet : {m['Subject']}\n\n{m.get_body(('plain',)).get_content()}"); continue
@@ -75,4 +88,4 @@ for f in sorted(DEPART.glob("*.json")):
     trace.touch(exist_ok=False)  # tracé avant l'envoi : mieux vaut un courrier manqué que deux
     with smtplib.SMTP(c["serveur"], c.getint("port", 587), timeout=40) as s:
         s.starttls(context=ssl.create_default_context()); s.login(c["identifiant"], secret); s.send_message(m)
-    print("envoyé", f.name, "à", len(DEST), "destinataire(s)")
+    print("envoyé", f.name, "à", 1 if MODE_ALERTE else len(DEST), "destinataire(s)")
