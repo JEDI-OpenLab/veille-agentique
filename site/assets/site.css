@@ -262,3 +262,4 @@ pre{background:var(--surface);border:1px solid var(--line);border-radius:8px;pad
 .consigne{border-left:3px solid var(--teal);background:var(--surface);padding:14px 18px;border-radius:0 8px 8px 0;font-size:.96rem;overflow-wrap:anywhere}
 .band.alt .consigne{background:var(--bg)}.consigne p,.consigne ul{margin:0}.consigne p+p,.consigne li+li{margin-top:8px}.consigne ul{padding-left:1.1rem}
 .consigne.mission{border-color:var(--amber)}.prose h4{margin:6px 0 0;font-size:.95rem}
+p.prose{display:block}

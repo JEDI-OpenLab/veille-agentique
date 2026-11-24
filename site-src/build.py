@@ -42,6 +42,7 @@ v = hashlib.sha1((O / "assets/site.css").read_bytes()).hexdigest()[:10]
 for nom, titre in PAGES:
     corps = (S / f"{nom}.html").read_text()
     if nom == "consignes": corps = consignes(corps)
+    corps = corps.replace("« ", "«\u00a0").replace(" »", "\u00a0»")  # pas de coupure au bord des guillemets
     menu = "".join(f'<li><a href="{n}.html"{" aria-current=page" if n == nom else ""}>{t}</a></li>' for n, t in PAGES)
     t = "Veiller et contredire" if nom == "index" else f"{titre} · Veiller et contredire"
     (O / f"{nom}.html").write_text(f'''<!doctype html>

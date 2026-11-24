@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
-<link rel="stylesheet" href="assets/site.css?v=bc82666b99">
+<link rel="stylesheet" href="assets/site.css?v=1abbe8f7ea">
 </head>
 <body>
 <nav class="site-nav" aria-label="Sections du site"><div class="in">
@@ -30,7 +30,7 @@
 <script>
 const C=[{t:'Un ordre inventé',g:'Objection majeure',v:'…un processus en sept étapes, non linéaire et itératif, <mark>qui commence par la constitution d’une base de connaissances</mark> ciblée…',p:'Dans le guide, préparer la base est l’étape 3. La première consiste à définir le besoin et le rôle de l’agent.',n:'…un processus en sept étapes, non linéaire et itératif, <ins>qui s’appuie sur</ins> la génération augmentée par récupération…'},
 {t:'Un lien fabriqué',g:'Objection majeure',v:'L’atelier pratique, qui exige un accès à Copilot, <mark>illustre ces enjeux par l’exemple</mark> d’un agent déployé en mathématiques et statistique…',p:'Les deux faits sont exacts, mais ils viennent de deux pages différentes. Rien ne dit que l’atelier s’appuie sur cet exemple.',n:'L’atelier pratique […] permet de concevoir et configurer un agent en équipe ; <ins>le guide illustre quant à lui</ins> ces enjeux par l’exemple d’un agent déployé en mathématiques et statistique…'},
-{t:'Un verbe trop fort',g:'Objection mineure',v:'La qualité des sources fournies <mark>détermine</mark> directement celle des contenus générés.',p:'La source parle d’influence. « Détermine » transforme une influence en cause unique.',n:'La qualité des sources fournies <ins>influence</ins> directement celle des contenus générés.'},
+{t:'Un verbe trop fort',g:'Objection mineure',v:'La qualité des sources fournies <mark>détermine</mark> directement celle des contenus générés.',p:'La source parle d’influence. « Détermine » transforme une influence en cause unique.',n:'La qualité des sources fournies <ins>influence</ins> directement celle des contenus générés.'},
 {t:'Une limite oubliée',g:'Objection mineure',v:'Une formation associée, <mark>s’appuyant sur des principes […] tirés de la recherche</mark>…',p:'La référence citée n’est pas consultable depuis la page, et le billet ne le disait pas.',n:'<ins>La référence […] est citée par la page de formation mais n’est pas consultable depuis celle-ci.</ins>'}];
 const $=i=>document.getElementById(i);function voir(k){const c=C[k];$('avant').innerHTML=c.v;$('grav').textContent=c.g;$('pb').textContent=c.p;$('apres').innerHTML=c.n;[...$('choix').children].forEach((b,i)=>b.setAttribute('aria-pressed',i===k))}
 C.forEach((c,i)=>{const b=document.createElement('button');b.type='button';b.textContent=c.t;b.onclick=()=>voir(i);$('choix').append(b)});voir(0);
