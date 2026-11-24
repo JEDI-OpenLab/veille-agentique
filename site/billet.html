@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Un billet à la loupe · Veiller et contredire</title>
+<meta name="description" content="Veiller et contredire : une expérimentation pédagogique de veille par cinq agents d’IA, avec des modèles servis par ILaaS et Albert. JEDI-OpenLab, Centrale Lille.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=3a94cf272f">
+</head>
+<body>
+<nav class="site-nav" aria-label="Sections du site"><div class="in">
+<div class="marque"><a class="portail" href="https://jedi-openlab.github.io/jedi/" title="Portail JEDI-OpenLab"><img src="https://jedi-openlab.github.io/jedi/PIX/jedi-favicon-180-2026.png" alt="JEDI-OpenLab, retour au portail" width="40" height="40"></a>
+<a class="brand" href="index.html">Veiller et contredire</a></div>
+<ul><li><a href="index.html">Accueil</a></li><li><a href="circuit.html">L’équipe et le circuit</a></li><li><a href="billet.html" aria-current=page>Un billet à la loupe</a></li><li><a href="incidents.html">Ce qui a raté</a></li><li><a href="modeles.html">Les modèles</a></li><li><a href="protocole.html">Protocole</a></li><li><a href="refaire.html">Refaire</a></li></ul></div></nav>
+<main>
+<section class="band"><div class="wrap"><div class="prose"><h1>Un billet à la loupe</h1><p class="lead">24 novembre 2026, premier passage complet : trois versions en vingt-trois minutes. Voici des phrases contestées et ce qu’elles sont devenues.</p></div>
+<div class="choix" id="choix" aria-label="Choisir une objection"></div>
+<div class="loupe" aria-live="polite"><div><b class="small muted">Écrit par Watson</b><p class="avant" id="avant"></p><p class="small"><span class="tag contre" id="grav"></span></p></div><div><b class="small muted">Contesté par Alfred</b><p id="pb"></p><p><b class="small muted">Version publiée</b></p><p class="avant" id="apres"></p></div></div>
+<noscript><p>Cette comparaison demande JavaScript.</p></noscript>
+</div></section>
+<section class="band alt"><div class="wrap"><div class="prose"><h2>Le déroulé</h2></div>
+<ol class="timeline"><li><time>9 h 11</time><p><b>Nestor</b> cherche. Cinq ressources nouvelles.</p></li><li><time>9 h 14</time><p><b>Jarvis</b> retient deux pages d’une même université.</p></li><li><time>9 h 15</time><p><b>R2-D2</b> extrait 12 affirmations. Le code retrouve les 12 extraits.</p></li><li><time>9 h 18</time><p><b>Watson</b> écrit la version 1. <b>Alfred</b> répond : deux objections majeures, une mineure.</p></li><li><time>9 h 22</time><p>Version 2. Deux objections mineures.</p></li><li><time>9 h 27</time><p>Version 3. Acceptée.</p></li><li><time>9 h 34</time><p>Billet publié sur un blog interne.</p></li></ol></div></section>
+<section class="band"><div class="wrap"><div class="prose"><h2>Ce que le billet final ne réussit pas</h2>
+<p>Il est prudent, mais s’appuie sur deux pages institutionnelles et aucune étude. Son accroche est abstraite et il compte environ 440 mots, sous le minimum demandé.</p>
+<p>Alfred s’est aussi trompé de rôle. Pour corriger une phrase, il a fourni un détail lu sur la page, que R2-D2 n’avait pas validé, et Watson l’a repris. Enfin, il a renvoyé une version qui n’avait plus que des défauts mineurs, contre sa propre règle. Le contradicteur n’est pas un arbitre infaillible.</p></div></div></section>
+<script>
+const C=[{t:'Un ordre inventé',g:'Objection majeure',v:'…un processus en sept étapes, non linéaire et itératif, <mark>qui commence par la constitution d’une base de connaissances</mark> ciblée…',p:'Dans le guide, préparer la base est l’étape 3. La première consiste à définir le besoin et le rôle de l’agent.',n:'…un processus en sept étapes, non linéaire et itératif, <ins>qui s’appuie sur</ins> la génération augmentée par récupération…'},
+{t:'Un lien fabriqué',g:'Objection majeure',v:'L’atelier pratique, qui exige un accès à Copilot, <mark>illustre ces enjeux par l’exemple</mark> d’un agent déployé en mathématiques et statistique…',p:'Les deux faits sont exacts, mais ils viennent de deux pages différentes. Rien ne dit que l’atelier s’appuie sur cet exemple.',n:'L’atelier pratique […] permet de concevoir et configurer un agent en équipe ; <ins>le guide illustre quant à lui</ins> ces enjeux par l’exemple d’un agent déployé en mathématiques et statistique…'},
+{t:'Un verbe trop fort',g:'Objection mineure',v:'La qualité des sources fournies <mark>détermine</mark> directement celle des contenus générés.',p:'La source parle d’influence. « Détermine » transforme une influence en cause unique.',n:'La qualité des sources fournies <ins>influence</ins> directement celle des contenus générés.'},
+{t:'Une limite oubliée',g:'Objection mineure',v:'Une formation associée, <mark>s’appuyant sur des principes […] tirés de la recherche</mark>…',p:'La référence citée n’est pas consultable depuis la page, et le billet ne le disait pas.',n:'<ins>La référence […] est citée par la page de formation mais n’est pas consultable depuis celle-ci.</ins>'}];
+const $=i=>document.getElementById(i);function voir(k){const c=C[k];$('avant').innerHTML=c.v;$('grav').textContent=c.g;$('pb').textContent=c.p;$('apres').innerHTML=c.n;[...$('choix').children].forEach((b,i)=>b.setAttribute('aria-pressed',i===k))}
+C.forEach((c,i)=>{const b=document.createElement('button');b.type='button';b.textContent=c.t;b.onclick=()=>voir(i);$('choix').append(b)});voir(0);
+</script>
+
+</main>
+<footer class="site-foot"><div class="in">
+<span>JEDI-OpenLab, Centrale Lille. Expérimentation pédagogique, document de travail.</span>
+<span>Voir aussi <a href="https://jedi-openlab.github.io/dire-et-taire/">Dire et taire</a> · <a href="https://jediopenlab.hypotheses.org/">Carnet de recherche</a> · <a href="https://github.com/JEDI-OpenLab/veille-agentique">Documents et code</a></span>
+</div></footer>
+</body>
+</html>

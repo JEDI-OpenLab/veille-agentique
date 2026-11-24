@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>L’équipe et le circuit · Veiller et contredire</title>
+<meta name="description" content="Veiller et contredire : une expérimentation pédagogique de veille par cinq agents d’IA, avec des modèles servis par ILaaS et Albert. JEDI-OpenLab, Centrale Lille.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=3a94cf272f">
+</head>
+<body>
+<nav class="site-nav" aria-label="Sections du site"><div class="in">
+<div class="marque"><a class="portail" href="https://jedi-openlab.github.io/jedi/" title="Portail JEDI-OpenLab"><img src="https://jedi-openlab.github.io/jedi/PIX/jedi-favicon-180-2026.png" alt="JEDI-OpenLab, retour au portail" width="40" height="40"></a>
+<a class="brand" href="index.html">Veiller et contredire</a></div>
+<ul><li><a href="index.html">Accueil</a></li><li><a href="circuit.html" aria-current=page>L’équipe et le circuit</a></li><li><a href="billet.html">Un billet à la loupe</a></li><li><a href="incidents.html">Ce qui a raté</a></li><li><a href="modeles.html">Les modèles</a></li><li><a href="protocole.html">Protocole</a></li><li><a href="refaire.html">Refaire</a></li></ul></div></nav>
+<main>
+<section class="band"><div class="wrap"><div class="prose"><h1>L’équipe et le circuit</h1><p class="lead">Cinq rôles séparés, et du code pour tout ce qui se vérifie sans jugement.</p></div>
+<div class="agents">
+<article><h3>Nestor</h3><p><b>Cherche.</b> Il ouvre des pages récentes, les résume et donne leur adresse.</p><p class="muted">Il ne décide pas de ce qui mérite un billet.</p></article>
+<article><h3>Jarvis</h3><p><b>Choisit.</b> Il retient un sujet, ou aucun, et explique les abandons.</p><p class="muted">Il ne vérifie pas et ne rédige pas.</p></article>
+<article><h3>R2-D2</h3><p><b>Vérifie.</b> Il tire des pages des affirmations, chacune avec un extrait recopié, et note les limites de méthode.</p><p class="muted">Ses extraits sont eux-mêmes contrôlés par le code.</p></article>
+<article><h3>Watson</h3><p><b>Écrit.</b> Il rédige à partir des seules affirmations validées, puis lance la publication.</p><p class="muted">Il ne peut pas ajouter un fait, même vrai.</p></article>
+<article><h3>Alfred</h3><p><b>Conteste.</b> Il cherche surinterprétations, faux liens et limites oubliées.</p><p class="muted">Il ne propose pas de nouveaux faits et ne bloque pas pour une question de goût.</p></article>
+</div></div></section>
+<section class="band alt"><div class="wrap"><div class="prose"><h2>Du signal au billet</h2><p>Chaque étape laisse un fichier. Le code lit ce fichier avant de passer la main, et le circuit peut s’arrêter à quatre endroits. Ne rien publier est une issue normale.</p></div>
+<figure><div class="fig"><svg class="wide" viewBox="0 0 1000 330" role="img" aria-label="Cinq étapes : recherche, choix, vérification, rédaction, contestation, puis publication. Sous chaque étape, un contrôle du code ; arrêts possibles si rien de nouveau, rien de retenu, moins de trois affirmations, ou refus du texte.">
+<defs><marker id="b" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" class="f-m"/></marker><marker id="q" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" class="f-r"/></marker></defs>
+<g text-anchor="middle">
+<g class="t-l"><rect x="10" y="60" width="130" height="60" rx="8" class="box-t"/><text x="75" y="95">Recherche</text><rect x="178" y="60" width="130" height="60" rx="8" class="box-v"/><text x="243" y="95">Choix</text><rect x="346" y="60" width="130" height="60" rx="8" class="box-t"/><text x="411" y="95">Vérification</text><rect x="514" y="60" width="130" height="60" rx="8" class="box-a"/><text x="579" y="95">Rédaction</text><rect x="682" y="60" width="130" height="60" rx="8" class="box-r"/><text x="747" y="95">Contestation</text><rect x="860" y="60" width="130" height="60" rx="8" class="box"/><text x="925" y="95">Publication</text></g>
+<g class="t-m muted"><text x="75" y="166">Adresses déjà</text><text x="75" y="183">vues retirées</text><text x="243" y="166">Adresses issues</text><text x="243" y="183">de la recherche</text><text x="411" y="166">Extraits recherchés</text><text x="411" y="183">dans la page</text><text x="579" y="166">Fichiers</text><text x="579" y="183">présents</text><text x="747" y="166">Trois versions</text><text x="747" y="183">au plus</text><text x="925" y="166">Une seule fois,</text><text x="925" y="183">si accord</text></g>
+<g class="t-m"><rect x="10" y="236" width="130" height="50" rx="8" class="box-s dash"/><text x="75" y="266">Rien de nouveau</text><rect x="178" y="236" width="130" height="50" rx="8" class="box-s dash"/><text x="243" y="266">Rien de solide</text><rect x="339" y="236" width="144" height="50" rx="8" class="box-s dash"/><text x="411" y="257">Moins de trois</text><text x="411" y="274">affirmations</text><rect x="682" y="236" width="130" height="50" rx="8" class="box-s dash"/><text x="747" y="266">Texte refusé</text></g>
+<text x="663" y="30" class="t-m" style="fill:var(--rose)">objections</text></g>
+<g class="edge"><path d="M140 90H176" marker-end="url(#b)"/><path d="M308 90H344" marker-end="url(#b)"/><path d="M476 90H512" marker-end="url(#b)"/><path d="M644 90H680" marker-end="url(#b)"/><path d="M812 90H858" marker-end="url(#b)"/><g class="dash"><path d="M75 194V234" marker-end="url(#b)"/><path d="M243 194V234" marker-end="url(#b)"/><path d="M411 194V234" marker-end="url(#b)"/><path d="M747 194V234" marker-end="url(#b)"/></g></g>
+<path d="M747 60C747 28 579 28 579 57" class="edge-r" marker-end="url(#q)"/></svg></div><figcaption>En haut, le travail des agents. Au milieu, ce que le code contrôle. En bas, en pointillés, les arrêts possibles.</figcaption></figure></div></section>
+<section class="band"><div class="wrap"><div class="prose"><h2>Qui contrôle qui</h2><p>La règle de départ : personne ne valide seul son propre travail.</p></div>
+<div class="table"><table><thead><tr><th>Ce qui est produit</th><th>Contrôle par le code</th><th>Contrôle par un agent</th><th>Contrôle humain</th></tr></thead><tbody>
+<tr><td>Fiches de Nestor</td><td>Doublons d’adresses</td><td>Jarvis choisit</td><td>Prévu</td></tr><tr><td>Affirmations de R2-D2</td><td>Extrait présent mot pour mot</td><td>Aucun avant la rédaction</td><td>Prévu</td></tr><tr><td>Texte de Watson</td><td>Fichiers présents</td><td>Alfred conteste</td><td>Prévu</td></tr><tr><td>Verdict d’Alfred</td><td>Nombre de versions</td><td>Aucun</td><td>Prévu, en aveugle</td></tr></tbody></table></div>
+<p class="prose muted">Le tableau montre aussi les trous : rien ne vérifie automatiquement qu’une affirmation traduit bien son extrait, ni qu’Alfred a raison.</p></div></section>
+
+</main>
+<footer class="site-foot"><div class="in">
+<span>JEDI-OpenLab, Centrale Lille. Expérimentation pédagogique, document de travail.</span>
+<span>Voir aussi <a href="https://jedi-openlab.github.io/dire-et-taire/">Dire et taire</a> · <a href="https://jediopenlab.hypotheses.org/">Carnet de recherche</a> · <a href="https://github.com/JEDI-OpenLab/veille-agentique">Documents et code</a></span>
+</div></footer>
+</body>
+</html>

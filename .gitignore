@@ -1,0 +1,11 @@
+.env
+.env.*
+*.key
+secrets/
+prive/
+dossiers/
+logs/
+__pycache__/
+.DS_Store
+PAPN-configuration.md
+SYNTHESE.md

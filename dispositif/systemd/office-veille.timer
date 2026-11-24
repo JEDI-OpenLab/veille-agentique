@@ -1,0 +1,10 @@
+[Unit]
+Description=PAPN, du lundi au vendredi a 9 h
+
+[Timer]
+OnCalendar=Mon..Fri 09:00:00 Europe/Paris
+Persistent=false
+AccuracySec=1min
+
+[Install]
+WantedBy=timers.target
