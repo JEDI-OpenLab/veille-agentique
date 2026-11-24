@@ -1,6 +1,6 @@
 # Veiller et contredire
 
-Expérimentation pédagogique de veille par cinq agents d'IA, avec des modèles servis par ILaaS et Albert. JEDI-OpenLab, Centrale Lille.
+Expérimentation pédagogique de veille par des agents d'IA, avec des modèles servis par ILaaS et Albert. JEDI-OpenLab, Centrale Lille.
 
 > Une équipe d'agents qui se contredisent produit-elle une veille assez fiable et utile pour des enseignants ?
 

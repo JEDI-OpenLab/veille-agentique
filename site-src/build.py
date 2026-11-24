@@ -4,9 +4,9 @@ import ast, hashlib, html
 from pathlib import Path
 S = Path(__file__).parent
 O = S.parent / "site"
-PAGES = [("index", "Accueil"), ("circuit", "L’équipe et le circuit"), ("consignes", "Les consignes"), ("billet", "Un billet à la loupe"),
+PAGES = [("index", "Accueil"), ("circuit", "Les équipes et le circuit"), ("consignes", "Les consignes"), ("billet", "Un billet à la loupe"),
          ("incidents", "Ce qui a raté"), ("modeles", "Les modèles"), ("protocole", "Protocole"), ("refaire", "Refaire"), ("technique", "Technique")]
-DESC = "Veiller et contredire : une expérimentation pédagogique de veille par cinq agents d’IA, avec des modèles servis par ILaaS et Albert. JEDI-OpenLab, Centrale Lille."
+DESC = "Veiller et contredire : une expérimentation pédagogique de veille par des agents d’IA, avec des modèles servis par ILaaS et Albert. JEDI-OpenLab, Centrale Lille."
 DISPO = S.parent / "dispositif"
 EQUIPE = [("nestor", "Nestor", "Cherche"), ("jarvis", "Jarvis", "Choisit"), ("r2d2", "R2-D2", "Vérifie"), ("watson", "Watson", "Écrit"), ("alfred", "Alfred", "Conteste"), ("moneypenny", "Moneypenny", "Résume la semaine"), ("hedwige", "Hedwige", "Met en page le courrier")]
 
