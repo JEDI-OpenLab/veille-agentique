@@ -13,7 +13,6 @@ Expérimentation pédagogique de veille par des agents d'IA, avec des modèles s
 
 ## Points encore ouverts
 
-- Conditions d'ILaaS et d'Albert sur la publication de comparatifs : à relire.
 - Protocole : proposition, à arrêter avant toute évaluation humaine.
 - Les noms des agents sont de simples clins d'œil, sans lien avec leurs ayants droit.
 
