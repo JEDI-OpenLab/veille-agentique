@@ -8,6 +8,9 @@ read -rp "Serveur d'envoi : " SERVEUR
 read -rp "Identifiant : " IDENT
 read -rp "Adresse d'expedition : " EXP
 read -rp "Destinataires, separes par des virgules : " DEST
+read -rp "Lien du blog (vide pour aucun) : " BLOG
+read -rp "Lien de PAPN en direct (vide pour aucun) : " DIRECT
+read -rp "Lien du site du projet (vide pour aucun) : " PROJET
 read -rsp "Mot de passe (invisible) : " MDP; echo
 id papn-mail >/dev/null 2>&1 || useradd --system --no-create-home --shell /usr/sbin/nologin papn-mail
 install -d -o root -g root -m 755 /opt/papn-mail
@@ -17,7 +20,7 @@ install -d -o papn-mail -g papn-mail -m 700 /var/lib/papn-mail
 install -d -o "$AGENTS" -g papn-mail -m 2750 /var/spool/papn-mail
 umask 077
 printf '%s' "$MDP" > /etc/papn-mail/motdepasse; unset MDP
-printf '[mail]\nserveur = %s\nport = 587\nidentifiant = %s\nexpediteur = %s\ndestinataires = %s\ndepart = /var/spool/papn-mail\netat = /var/lib/papn-mail\n' "$SERVEUR" "${IDENT//%/%%}" "$EXP" "$DEST" > /etc/papn-mail/config.ini
+printf '[mail]\nserveur = %s\nport = 587\nidentifiant = %s\nexpediteur = %s\ndestinataires = %s\ndepart = /var/spool/papn-mail\netat = /var/lib/papn-mail\nlien_blog = %s\nlien_direct = %s\nlien_projet = %s\n' "$SERVEUR" "${IDENT//%/%%}" "$EXP" "$DEST" "${BLOG//%/%%}" "${DIRECT//%/%%}" "${PROJET//%/%%}" > /etc/papn-mail/config.ini
 chown root:papn-mail /etc/papn-mail/config.ini; chmod 640 /etc/papn-mail/config.ini
 umask 022
 cat > /etc/systemd/system/papn-mail.service <<'S'
