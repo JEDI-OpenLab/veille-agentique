@@ -76,7 +76,7 @@ def bon_recap(r):
 def bonne_revue(r): assert r.get("verdict") in ("accepte", "corriger", "rejete") and isinstance(r.get("objections"), list), "verdict et objections attendus"
 suite = ""
 for n in (1, 2, 3):
-    r = tache("moneypenny", f"Récapitulatif, version {n}", "Lis semaine.json. JSON : {titre, intro, themes: [{titre, texte, refs: [identifiants]}]}. 1 à 4 thèmes, 600 mots au plus. Présente les R comme repérés, non vérifiés." + suite, "recap.json", bon_recap)
+    r = tache("moneypenny", f"Récapitulatif, version {n}", "Lis semaine.json. Le titre ne répète pas les dates, elles figurent déjà en tête. JSON : {titre, intro, themes: [{titre, texte, refs: [identifiants]}]}. 1 à 4 thèmes, 600 mots au plus. Présente les R comme repérés, non vérifiés." + suite, "recap.json", bon_recap)
     if not r: fin(1, "Échec : Moneypenny n'a pas rendu un récapitulatif valable.")
     v = tache("alfred", f"Revue du récapitulatif {n}", "Confronte recap.json à semaine.json, ta seule base factuelle ici. Les règles de longueur et d'accroche des billets ne s'appliquent pas. JSON : {verdict: \"accepte\"|\"corriger\"|\"rejete\", objections: [{gravite: \"majeure\"|\"mineure\", phrase, probleme, correction}]}.", f"revue-{n}.json", bonne_revue)
     if not v: fin(1, "Échec : Alfred n'a pas rendu de revue valable.")
@@ -100,7 +100,7 @@ def bon_ordre(x):
 h = tache("hedwige", "Mise en page du courrier", "Lis blocs.json. Choisis l'ordre de lecture et un bloc à mettre en avant. JSON : {ordre: [tous les identifiants, une fois chacun], en_avant: un identifiant}. Aucun autre texte.", "mise_en_page.json", bon_ordre, 8)
 if not h: log("Hedwige indisponible : ordre d'origine conservé"); h = {"ordre": list(blocs), "en_avant": "T1"}
 ordre = [h["en_avant"]] + [i for i in h["ordre"] if i != h["en_avant"]]
-courrier = {"id": D.name, "objet": f"[PAPN] La veille du {debut:%d/%m} au {fin_s:%d/%m}", "titre": r["titre"], "intro": r["intro"], "blocs": [blocs[i] for i in ordre]}
+courrier = {"id": D.name, "objet": f"[PAPN] La veille du {debut:%d/%m} au {fin_s:%d/%m}", "periode": f"Du {debut:%d/%m/%Y} au {fin_s:%d/%m/%Y}", "titre": r["titre"], "intro": r["intro"], "blocs": [blocs[i] for i in ordre]}
 ecrire("courrier.json", courrier)
 e = lambda t: "".join(f"<p>{html.escape(x.strip())}</p>" for x in str(t).split("\n") if x.strip())
 corps = e(r["intro"]) + "".join(f"<h2>{html.escape(b['titre'])}</h2>{e(b['texte'])}<ul>" + "".join(
