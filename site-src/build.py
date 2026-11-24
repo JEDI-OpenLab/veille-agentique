@@ -5,7 +5,7 @@ from pathlib import Path
 S = Path(__file__).parent
 O = S.parent / "site"
 PAGES = [("index", "Accueil"), ("circuit", "L’équipe et le circuit"), ("billet", "Un billet à la loupe"),
-         ("incidents", "Ce qui a raté"), ("modeles", "Les modèles"), ("protocole", "Protocole"), ("refaire", "Refaire")]
+         ("incidents", "Ce qui a raté"), ("modeles", "Les modèles"), ("protocole", "Protocole"), ("refaire", "Refaire"), ("technique", "Technique")]
 DESC = "Veiller et contredire : une expérimentation pédagogique de veille par cinq agents d’IA, avec des modèles servis par ILaaS et Albert. JEDI-OpenLab, Centrale Lille."
 v = hashlib.sha1((O / "assets/site.css").read_bytes()).hexdigest()[:10]
 for nom, titre in PAGES:

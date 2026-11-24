@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Technique · Veiller et contredire</title>
+<meta name="description" content="Veiller et contredire : une expérimentation pédagogique de veille par cinq agents d’IA, avec des modèles servis par ILaaS et Albert. JEDI-OpenLab, Centrale Lille.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=3a94cf272f">
+</head>
+<body>
+<nav class="site-nav" aria-label="Sections du site"><div class="in">
+<div class="marque"><a class="portail" href="https://jedi-openlab.github.io/jedi/" title="Portail JEDI-OpenLab"><img src="https://jedi-openlab.github.io/jedi/PIX/jedi-favicon-180-2026.png" alt="JEDI-OpenLab, retour au portail" width="40" height="40"></a>
+<a class="brand" href="index.html">Veiller et contredire</a></div>
+<ul><li><a href="index.html">Accueil</a></li><li><a href="circuit.html">L’équipe et le circuit</a></li><li><a href="billet.html">Un billet à la loupe</a></li><li><a href="incidents.html">Ce qui a raté</a></li><li><a href="modeles.html">Les modèles</a></li><li><a href="protocole.html">Protocole</a></li><li><a href="refaire.html">Refaire</a></li><li><a href="technique.html" aria-current=page>Technique</a></li></ul></div></nav>
+<main>
+<section class="band"><div class="wrap"><div class="prose"><h1>Installation technique</h1><p class="lead">Ce qu’il faut pour monter une équipe comparable sur un serveur Linux : Hermes Agent, Hermes Virtual Office, des clés ILaaS et Albert, un blog Ghost.</p>
+<p class="small muted">Relevé du 24 novembre 2026 sur Ubuntu 22.04, avec Hermes Agent 0.23.2, Virtual Office (version <code>1d23350</code>) et Ghost 6.63. Les commandes d’installation viennent des documentations de ces projets ; nous n’avons pas refait l’installation de zéro pour écrire cette page.</p></div>
+<div class="table"><table><thead><tr><th>Brique</th><th>À quoi elle sert</th><th>Indispensable ?</th></tr></thead><tbody>
+<tr><td><a href="https://github.com/NousResearch/hermes-agent">Hermes Agent</a> (MIT)</td><td>Fait vivre les agents : consignes, outils, tâches, mémoire</td><td>Oui</td></tr>
+<tr><td><a href="https://github.com/JuniorXcoder/hermes-virtual-office">Hermes Virtual Office</a> (MIT)</td><td>Montre les agents dans un bureau virtuel</td><td>Non, c’est une fenêtre</td></tr>
+<tr><td>ILaaS et Albert</td><td>Servent les modèles de langage</td><td>L’un des deux suffit pour débuter</td></tr>
+<tr><td>Ghost</td><td>Reçoit les billets</td><td>Non, un fichier peut suffire</td></tr></tbody></table></div></div></section>
+
+<section class="band alt" id="hermes"><div class="wrap"><div class="prose"><h2>Hermes Agent</h2>
+<p>Sur Linux, macOS ou WSL2, la documentation propose un installateur. Comme tout script téléchargé, mieux vaut le lire avant de l’exécuter.</p>
+<pre><code>curl -fsSL https://hermes-agent.nousresearch.com/install.sh -o install.sh
+less install.sh
+bash install.sh</code></pre>
+<p>Puis on choisit un fournisseur, on vérifie, et on installe le service qui fait tourner les agents en continu :</p>
+<pre><code>hermes model
+hermes doctor
+hermes gateway install</code></pre>
+<h3>Créer l’équipe</h3><p>Chaque agent est un profil, avec ses consignes, son modèle et ses clés.</p>
+<pre><code>hermes profile create nestor
+hermes profile create jarvis --clone-from nestor
+hermes profile list</code></pre>
+<p>Les consignes vont dans <code>~/.hermes/profiles/&lt;profil&gt;/SOUL.md</code>. Les nôtres sont dans <a href="https://github.com/JEDI-OpenLab/veille-agentique/tree/main/dispositif/consignes">le dépôt</a>.</p></div></div></section>
+
+<section class="band" id="cles"><div class="wrap"><div class="prose"><h2>Les clés ILaaS et Albert</h2>
+<p>Une clé API identifie celui qui appelle un modèle. C’est un secret, au même titre qu’un mot de passe.</p></div>
+<div class="table"><table><thead><tr><th></th><th>ILaaS</th><th>Albert API</th></tr></thead><tbody>
+<tr><td>Qui le porte</td><td>Une fédération d’établissements de l’enseignement supérieur et de la recherche</td><td>L’État, via les services de ia.numerique.gouv.fr</td></tr>
+<tr><td>Obtenir une clé</td><td>Passer par la direction du numérique de son établissement</td><td>Demande d’accès, validation, puis création de la clé dans l’interface. Vérifier d’abord son éligibilité : le service est ouvert aux administrations de l’État et aux organismes sous sa tutelle, même partagée (<a href="https://guides.ia.numerique.gouv.fr/albert-api/ressources/faq">questions fréquentes</a>)</td></tr>
+<tr><td>Adresse</td><td><code>https://llm.ilaas.fr/v1</code></td><td><code>https://albert.api.etalab.gouv.fr/v1</code></td></tr>
+<tr><td>Format</td><td>Compatible OpenAI</td><td>Compatible OpenAI</td></tr></tbody></table></div>
+<div class="prose"><p class="small muted">Les conditions d’accès, les quotas et les modèles évoluent : vérifiez-les auprès de chaque service. Albert n’affiche la clé complète qu’à sa création (<a href="https://guides.ia.numerique.gouv.fr/albert-api/compte-and-usage/api-keys">documentation</a>).</p>
+<h3>Ranger les clés</h3><p>Dans le fichier <code>.env</code> du profil, lisible par son seul propriétaire :</p>
+<pre><code>ILAAS_API_KEY=votre-cle
+ALBERT_API_KEY=votre-cle</code></pre>
+<pre><code>chmod 600 ~/.hermes/profiles/nestor/.env</code></pre>
+<p>Dans <code>config.yaml</code>, on cite le nom de la variable, jamais la clé :</p>
+<pre><code>model:
+  default: gemma-4-31b
+  provider: custom
+  base_url: https://llm.ilaas.fr/v1
+  api_key: ${ILAAS_API_KEY}
+
+custom_providers:
+  - name: ilaas
+    base_url: https://llm.ilaas.fr/v1
+    key_env: ILAAS_API_KEY
+  - name: albert
+    base_url: https://albert.api.etalab.gouv.fr/v1
+    key_env: ALBERT_API_KEY
+
+fallback_providers:
+  - provider: custom
+    model: deepseek-v4-flash-0731
+    base_url: https://albert.api.etalab.gouv.fr/v1</code></pre>
+<p>Cet exemple est simplifié. <code>hermes model</code> génère ses propres noms de variables. Le nom d’un modèle doit correspondre exactement à celui que le service propose :</p>
+<pre><code>curl -s -H "Authorization: Bearer $ILAAS_API_KEY" https://llm.ilaas.fr/v1/models</code></pre>
+<h3>Le piège du secours silencieux</h3><p>Qwen, sur ILaaS, refusait le niveau de raisonnement « high » et Hermes passait au modèle de secours. Il faut un réglage propre à ce modèle :</p>
+<pre><code>agent:
+  reasoning_effort: high
+  reasoning_overrides:
+    qwen-3.8-27b: medium</code></pre>
+<p>Puis lire dans les journaux quel modèle a répondu :</p>
+<pre><code>grep -E 'API call|Fallback activated' ~/.hermes/profiles/r2d2/logs/agent.log | tail</code></pre></div></div></section>
+
+<section class="band alt" id="office"><div class="wrap"><div class="prose"><h2>Hermes Virtual Office</h2>
+<blockquote class="thesis"><p>À savoir avant d’installer : l’interface est en grande partie en indonésien, avec de l’anglais par endroits. Il n’y a pas de version française.</p></blockquote>
+<p>La documentation est en anglais, ce qui peut surprendre ensuite. Dans la version que nous avons relevée, aucun choix de langue : nous n’y avons trouvé ni bibliothèque ni fichier de traduction. Les textes sont écrits directement dans le code.</p>
+<p>Nous avons donc traduit l’interface à la main, fichier par fichier. C’est faisable, mais incomplet, et à refaire ou à fusionner à chaque mise à jour. Extraire les textes dans des fichiers de langue serait une belle contribution à proposer au projet.</p></div>
+<div class="table"><table><thead><tr><th>Indonésien</th><th>Français</th><th>Indonésien</th><th>Français</th></tr></thead><tbody><tr><td>Papan</td><td>Tableau</td><td>Tugas</td><td>Tâche</td></tr><tr><td>Rapat</td><td>Réunion</td><td>Pilih</td><td>Choisir</td></tr><tr><td>Simpan</td><td>Enregistrer</td><td>Batal</td><td>Annuler</td></tr><tr><td>Tutup</td><td>Fermer</td><td>Hapus</td><td>Supprimer</td></tr><tr><td>Sembunyikan</td><td>Masquer</td><td>Belum</td><td>Pas encore</td></tr></tbody></table></div>
+<div class="prose"><h3>Installer</h3><p>Il faut Node.js, et que l’office tourne sur la même machine que Hermes, car il pilote sa ligne de commande.</p>
+<pre><code>git clone https://github.com/JuniorXcoder/hermes-virtual-office.git
+cd hermes-virtual-office
+cp .env.example .env.local
+npm install
+npm run build
+npm start</code></pre>
+<p>Dans <code>.env.local</code>, une ligne est obligatoire, avec le chemin complet :</p>
+<pre><code>HERMES_BIN=/chemin/vers/hermes</code></pre>
+<p>Sans elle, l’interface affiche que le serveur est hors ligne. Nous l’avons appris en relançant l’office sans lui transmettre ce chemin.</p>
+<h3>Protéger l’accès</h3><ul><li>Laisser l’office sur <code>127.0.0.1</code>, derrière un serveur web qui demande un mot de passe, en HTTPS.</li><li>L’interface peut agir sur les agents et supprimer un profil. Nous avons ajouté un filtre qui n’autorise que la lecture ; il n’existe pas dans le projet d’origine.</li><li>Ne pas l’exposer sur Internet.</li></ul></div></div></section>
+
+<section class="band" id="suite"><div class="wrap"><div class="prose"><h2>Ghost et le circuit</h2>
+<p>Dans Ghost, créer une intégration personnalisée fournit une clé d’administration. Seul le profil qui publie en a besoin :</p>
+<pre><code>GHOST_API_URL=https://votre-blog
+GHOST_ADMIN_API_KEY=votre-cle</code></pre>
+<p>Placer ensuite les scripts de <code>dispositif/</code> dans <code>~/laboratoire-veille</code>, avec <code>sources.md</code> et un fichier <code>deja_vu.txt</code>, même vide. <code>office.py</code> attend Hermes dans <code>~/hermes-agent</code> : adapter ce chemin si besoin. Copier les deux fichiers systemd dans <code>~/.config/systemd/user/</code>, puis :</p>
+<pre><code>touch ~/laboratoire-veille/deja_vu.txt
+systemctl --user daemon-reload
+systemctl --user start --no-block office-veille.service
+systemctl --user enable --now office-veille.timer</code></pre>
+<p>La troisième ligne lance un premier passage, <b>qui peut publier</b>. La dernière active l’horaire. Pour que tout fonctionne sans session ouverte, l’administrateur active <code>loginctl enable-linger</code> pour le compte.</p>
+<h3>Vérifier avant de faire confiance</h3><ol><li>Chaque agent répond, et avec le modèle prévu.</li><li>Aucune clé dans les consignes, le dépôt ou les captures d’écran.</li><li>Le compte des agents n’a pas de droits d’administration.</li><li>Profils, dossiers de passage et blog sont sauvegardés.</li><li>Le premier billet est lu par un humain.</li></ol></div></div></section>
+
+</main>
+<footer class="site-foot"><div class="in">
+<span>JEDI-OpenLab, Centrale Lille. Expérimentation pédagogique, document de travail.</span>
+<span>Voir aussi <a href="https://jedi-openlab.github.io/dire-et-taire/">Dire et taire</a> · <a href="https://jediopenlab.hypotheses.org/">Carnet de recherche</a> · <a href="https://github.com/JEDI-OpenLab/veille-agentique">Documents et code</a></span>
+</div></footer>
+</body>
+</html>
