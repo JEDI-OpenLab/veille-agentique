@@ -69,7 +69,7 @@ custom_providers:
 
 fallback_providers:
   - provider: custom
-    model: deepseek-v4-flash-0731
+    model: gemma-4-31b-it
     base_url: https://albert.api.etalab.gouv.fr/v1</code></pre>
 <p>Cet exemple est simplifié. <code>hermes model</code> génère ses propres noms de variables. Le nom d’un modèle doit correspondre exactement à celui que le service propose :</p>
 <pre><code>curl -s -H "Authorization: Bearer $ILAAS_API_KEY" https://llm.ilaas.fr/v1/models</code></pre>

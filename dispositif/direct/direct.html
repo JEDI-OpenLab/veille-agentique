@@ -6,7 +6,7 @@
 main{max-width:1180px;margin:auto;padding:24px 16px 60px;display:grid;gap:30px}h1,h2,h3{font-family:"Source Serif 4",Georgia,serif;line-height:1.2;margin:0}h1{font-size:2rem}h2{font-size:1.4rem;margin-bottom:12px}
 header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;align-items:end}p{margin:0}.m{color:var(--m)}.p{font-size:.9rem}
 #etat{font-size:1.15rem}.alerte{background:var(--rs);border-left:3px solid var(--rouge);padding:12px 16px;border-radius:0 8px 8px 0}
-.equipe{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}@media(max-width:900px){.equipe{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:480px){.equipe{grid-template-columns:1fr}}
+.equipe{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.trois{grid-template-columns:repeat(3,minmax(0,1fr))}@media(max-width:900px){.equipe{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:480px){.equipe{grid-template-columns:1fr}}.info{background:var(--s);border-left:3px solid var(--ambre);padding:12px 16px}
 .ag{border:1px solid var(--l);border-top:5px solid var(--c);border-radius:8px;background:var(--s);padding:14px;display:grid;gap:6px;align-content:start;overflow-wrap:anywhere}.ag h3{font-size:1.3rem}
 .ag.travaille{background:var(--f);border-color:var(--c)}.ag .e{font-weight:600}.ag.travaille .e{color:var(--c)}.mod{font-size:.85rem;border-top:1px solid var(--l);padding-top:6px}.faux{color:var(--rouge);font-weight:600}
 .deux{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:32px}@media(max-width:800px){.deux{grid-template-columns:1fr}}
@@ -16,31 +16,39 @@ table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:8px 10px
 .publie{color:var(--vert)}.abandon{color:var(--ambre)}.echec,.interrompu{color:var(--rouge)}.en_cours{color:var(--bleu)}a{color:var(--bleu);overflow-wrap:anywhere}
 </style></head><body><main>
 <header><div><h1>PAPN en direct</h1><p class="m">Pôle des Agents Pédagogiques Numériques</p></div><p class="m p" id="maj"></p></header>
-<p id="etat" aria-live="polite">Chargement…</p><div id="alerte" class="alerte" hidden></div>
-<section><div class="equipe" id="equipe"></div></section>
+<p id="etat" aria-live="polite">Chargement…</p><div id="alerte" class="alerte" hidden></div><div id="info" class="info p" hidden></div>
+<section><h2>Équipe de veille</h2><div class="equipe" id="equipe"></div></section>
+<section><h2>Équipe administrative</h2><p id="etatr" style="margin-bottom:12px"></p><div class="equipe trois" id="equiper"></div></section>
 <section id="sujet"></section>
 <div class="deux"><section><h2>Les objections d’Alfred</h2><div id="revues"></div></section><section><h2>Le fil du passage</h2><ol id="journal"></ol></section></div>
+<section id="lettre"><h2>Les objections sur la lettre de la semaine</h2><div id="revuesr"></div></section>
 <section><h2>Les derniers passages</h2><div class="t"><table><thead><tr><th>Date</th><th>Issue</th><th>Billet ou motif</th><th>Versions</th></tr></thead><tbody id="hist"></tbody></table></div></section>
 </main><script>
 const A={nestor:['Nestor','Cherche','vert','vs'],jarvis:['Jarvis','Choisit','bleu','bs'],r2d2:['R2-D2','Vérifie','vert','vs'],watson:['Watson','Écrit','ambre','as'],alfred:['Alfred','Conteste','rouge','rs']};
-const E={publie:'Publié',abandon:'Rien publié',echec:'Échec',interrompu:'Interrompu',en_cours:'En cours'};
+const B={moneypenny:['Moneypenny','Résume la semaine','ambre','as'],alfred:['Alfred','Conteste la lettre','rouge','rs'],hedwige:['Hedwige','Met en page','bleu','bs']};
+const E={publie:'Publié',abandon:'Rien publié',echec:'Échec',interrompu:'Interrompu',en_cours:'En cours',essai:'Essai réussi'};
 const $=i=>document.getElementById(i);function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
 const jour=i=>i.slice(8,10)+'/'+i.slice(5,7)+' à '+i.slice(11).replace('h',' h ');
+function cartes(G,ag,al,nf){return Object.entries(G).map(([k,[n,v,c,f]])=>{const a=ag[k],b=el('article','ag '+a.etat);b.style.setProperty('--c','var(--'+c+')');b.style.setProperty('--f','var(--'+f+')');
+ b.append(el('h3','',n),el('p','m p',v),el('p','e',{travaille:'Travaille',fait:'A terminé',attend:'En attente'}[a.etat]));if(a.tache)b.append(el('p','p',a.tache+(a.etat=='travaille'?', depuis '+a.depuis.slice(0,5):'')));
+ const r=Object.entries(a.reels),m=el('div','mod'),bas=new Set(a.bascules.map(y=>y.split(' → ')[1]));m.append(el('div','m','Modèle qui a répondu'));if(!r.length)m.append(el('div','','Aucun appel relevé'));
+ r.forEach(([q,z])=>m.append(el('div',bas.has(q)?'faux':'',q+' ('+z+(z>1?' appels)':' appel)'))));
+ if(a.bascules.length)al.push(n+' : '+a.bascules.join(', '));else{const w=r.filter(([q])=>a.prevu&&q!=a.prevu);if(w.length)nf.push(n+' ('+w.map(y=>y[0]).join(', ')+', réglage actuel '+a.prevu+')')}
+ if(a.prevu&&!r.some(([q])=>q==a.prevu))m.append(el('div','m','Réglage actuel : '+a.prevu));b.append(m);return b})}
+function rev(R,l,vide){R.replaceChildren();if(!l.length)R.append(el('p','m',vide));l.forEach((r,i)=>{const b=el('div','rev'+(r.verdict=='accepte'?' ok':''));b.append(el('h3','','Version '+(i+1)+' : '+({accepte:'acceptée',corriger:'objections',rejete:'rejetée'}[r.verdict]||'verdict illisible')));if(!r.objections.length)b.append(el('p','m',r.verdict?'Aucune objection.':'Contenu non lu.'));r.objections.forEach(o=>{o.phrase=o.phrase.replace(/^[«\s]+|[»\s]+$/g,'');const t=el('details');t.append(el('summary','',(o.gravite||'')+' : « '+o.phrase.slice(0,110)+(o.phrase.length>110?'…':'')+' »'),el('p','p',o.probleme));b.append(t)});R.append(b)})}
+const quand=t=>t?new Date(t/1000).toLocaleString('fr-FR',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'}):null;
+function recap(x,al,nf){const r=x.recap;$('equiper').replaceChildren(...cartes(B,r.agents,al,nf));const p=[];
+ if(!r.id)p.push('Aucun récapitulatif pour l’instant.');else if(r.etat=='en_cours')p.push('Récapitulatif en cours depuis '+r.debut.slice(0,5)+'.');else p.push('Dernier récapitulatif le '+r.jour.slice(8)+'/'+r.jour.slice(5,7)+' : '+E[r.etat].toLowerCase()+(r.titre?', « '+r.titre+' »':'')+'.');
+ p.push(x.prochain_recap?'Prochain : '+quand(x.prochain_recap)+'.':'Aucun récapitulatif programmé.');p.push(x.prochain_mail?'Courriel : '+quand(x.prochain_mail)+', par script.':'Courriel non programmé.');$('etatr').textContent=p.join(' ');rev($('revuesr'),r.revues||[],'Pas encore de revue.')}
 function voir(x){const d=x.dernier;$('maj').textContent='Mis à jour à '+x.maintenant;
  const nx=x.prochain?' Prochain passage : '+new Date(x.prochain/1000).toLocaleString('fr-FR',{weekday:'long',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'})+'.':' Aucun passage programmé.';
- if(!d){$('etat').textContent='Aucun passage pour l’instant.'+nx;return}
+ if(!d){$('etat').textContent='Aucun passage pour l’instant.'+nx;recap(x,[],[]);return}
  $('etat').textContent=(d.etat=='en_cours'?'Passage en cours depuis '+d.debut.slice(0,5)+'.':'Au repos. Dernier passage le '+jour(d.id)+' : '+E[d.etat].toLowerCase()+'.'+nx);
- const al=[];$('equipe').replaceChildren(...Object.entries(A).map(([k,[n,v,c,f]])=>{const a=d.agents[k],b=el('article','ag '+a.etat);b.style.setProperty('--c','var(--'+c+')');b.style.setProperty('--f','var(--'+f+')');
-  b.append(el('h3','',n),el('p','m p',v),el('p','e',{travaille:'Travaille',fait:'A terminé',attend:'En attente'}[a.etat]));if(a.tache)b.append(el('p','p',a.tache+(a.etat=='travaille'?', depuis '+a.depuis.slice(0,5):'')));
-  const r=Object.entries(a.reels),m=el('div','mod');m.append(el('div','m','Modèle qui a répondu'));if(!r.length)m.append(el('div','','Aucun appel relevé'));
-  r.forEach(([q,c])=>{const w=a.prevu&&q!=a.prevu;m.append(el('div',w?'faux':'',q+' ('+c+(c>1?' appels)':' appel)')));});
-  const w=r.filter(([q])=>a.prevu&&q!=a.prevu);if(w.length){m.append(el('div','m','Réglage actuel : '+a.prevu));al.push(n+' a utilisé '+w.map(y=>y[0]).join(', ')+', réglage actuel '+a.prevu)}
-  b.append(m);return b}));
- $('alerte').hidden=!al.length;$('alerte').textContent=al.length?'Modèle différent du réglage actuel. '+al.join(' ; ')+'. Bascule sur le secours, ou réglage changé depuis ce passage.':'';
+ const al=[],nf=[];$('equipe').replaceChildren(...cartes(A,d.agents,al,nf));
  const s=$('sujet');s.replaceChildren();if(d.titre||d.sujet){s.append(el('h2','',d.titre||d.sujet));s.append(el('p','m',[d.ressources+' ressource(s) nouvelle(s)',d.urls.length+' retenue(s)',d.extraits?d.extraits.ok+' extrait(s) retrouvé(s), '+d.extraits.ko+' écarté(s)':null,d.versions?d.versions+' version(s)':null].filter(Boolean).join(' · ')));
   d.urls.forEach(u=>{const p=el('p','p'),a=el('a','',u);a.href=u;a.rel='noreferrer noopener';a.target='_blank';p.append(a);s.append(p)})}else if(d.bilan)s.append(el('p','',d.bilan));
- const R=$('revues');R.replaceChildren();if(!d.revues.length)R.append(el('p','m','Pas encore de revue.'));
- d.revues.forEach((r,i)=>{const b=el('div','rev'+(r.verdict=='accepte'?' ok':''));b.append(el('h3','','Version '+(i+1)+' : '+({accepte:'acceptée',corriger:'à corriger',rejete:'rejetée'}[r.verdict]||'verdict illisible')));if(!r.objections.length)b.append(el('p','m','Aucune objection.'));r.objections.forEach(o=>{const t=el('details');t.append(el('summary','',(o.gravite||'')+' : « '+o.phrase.slice(0,110)+(o.phrase.length>110?'…':'')+' »'),el('p','p',o.probleme));b.append(t)});R.append(b)});
+ rev($('revues'),d.revues,'Pas encore de revue.');recap(x,al,nf);
+ $('alerte').hidden=!al.length;$('alerte').textContent=al.length?'Bascule sur un modèle de secours. '+al.join(' ; ')+'.':'';$('info').hidden=!nf.length;$('info').textContent=nf.length?'Réglage changé depuis ce passage : '+nf.join(' ; ')+'.':'';
  $('journal').replaceChildren(...d.journal.map(j=>{const l=el('li','j');l.append(el('time','',j.h),el('span','',j.t));return l}));
  $('hist').replaceChildren(...x.historique.map(h=>{const r=el('tr');r.append(el('td','',jour(h.id)),el('td',h.etat,E[h.etat]),el('td','',h.titre||h.bilan||''),el('td','',h.versions||''));return r}))}
 async function maj(){try{const b=location.pathname.endsWith('/')?'':location.pathname+'/';const r=await fetch(b+'api');if(!r.ok)throw 0;voir(await r.json())}catch(e){$('maj').textContent='Connexion perdue, nouvel essai dans 10 s'}}
