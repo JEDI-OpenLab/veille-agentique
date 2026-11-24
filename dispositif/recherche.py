@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Publications récentes de HAL et arXiv, par leurs interfaces publiques."""
-import html, json, re, sys, urllib.parse, urllib.request
+import html, json, re, sys, time, urllib.error, urllib.parse, urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 JOURS, MAX = 30, 12
@@ -24,7 +24,11 @@ def arxiv():
     q = '(cat:cs.CY OR cat:cs.HC OR cat:cs.AI) AND (abs:"higher education" OR abs:"university students" OR abs:"engineering education") AND (abs:"generative AI" OR abs:LLM OR abs:"artificial intelligence" OR abs:ChatGPT)'
     u = "https://export.arxiv.org/api/query?" + urllib.parse.urlencode({"search_query": q, "sortBy": "submittedDate", "sortOrder": "descending", "max_results": MAX})
     N, lim, r = {"a": "http://www.w3.org/2005/Atom"}, datetime.now(timezone.utc) - timedelta(days=JOURS), []
-    for e in ET.fromstring(lire(u)).findall("a:entry", N):
+    try: b = lire(u)
+    except urllib.error.HTTPError as err:
+        if err.code not in (429, 503): raise
+        time.sleep(30); b = lire(u)  # arXiv demande d'espacer les requêtes
+    for e in ET.fromstring(b).findall("a:entry", N):
         t = lambda k: net(e.findtext("a:" + k, "", N))
         if not t("published") or datetime.fromisoformat(t("published").replace("Z", "+00:00")) < lim: continue
         i = re.sub(r"v\d+$", "", t("id").rsplit("/abs/", 1)[-1])

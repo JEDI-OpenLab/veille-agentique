@@ -16,6 +16,7 @@ def texte(n):
     if isinstance(n, ast.JoinedStr): return "".join(texte(x) for x in n.values)
     if isinstance(n, ast.FormattedValue): return {"n": "‹n›", "L": "‹dossier commun›", "D": "‹dossier du jour›"}.get(ast.unparse(n.value), "‹valeur›")
     if isinstance(n, ast.BinOp): return texte(n.left) + texte(n.right)
+    if isinstance(n, ast.IfExp): return ""
     if isinstance(n, ast.Name): return {"suite": " ‹à partir de la version 2 : corriger selon la revue précédente, sans ajouter de fait›", "objections": " ‹à partir de la version 2 : corriger selon la revue précédente, en traitant chaque objection majeure›"}.get(n.id, "‹valeur›")
     return "‹deux sites, à tour de rôle›" if "sites" in ast.unparse(n) else "‹adresses retenues›"
 
