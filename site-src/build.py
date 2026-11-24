@@ -5,7 +5,7 @@ from pathlib import Path
 S = Path(__file__).parent
 O = S.parent / "site"
 PAGES = [("index", "Accueil"), ("circuit", "Les équipes et le circuit"), ("consignes", "Les consignes"), ("billet", "Un billet à la loupe"),
-         ("incidents", "Ce qui a raté"), ("modeles", "Les modèles"), ("protocole", "Protocole"), ("refaire", "Refaire"), ("technique", "Technique")]
+         ("incidents", "Ce qui a raté"), ("modeles", "Les modèles"), ("protocole", "Protocole"), ("refaire", "Refaire"), ("technique", "Technique"), ("feuille-de-route", "Feuille de route")]
 DESC = "Veiller et contredire : une expérimentation pédagogique de veille par des agents d’IA, avec des modèles servis par ILaaS et Albert. JEDI-OpenLab, Centrale Lille."
 DISPO = S.parent / "dispositif"
 EQUIPE = [("nestor", "Nestor", "Cherche"), ("moneypenny", "Moneypenny", "Choisit"), ("r2d2", "R2-D2", "Vérifie"), ("watson", "Watson", "Écrit"), ("velma", "Velma", "Conteste"), ("alfred", "Alfred", "Résume la semaine"), ("hedwige", "Hedwige", "Met en page le courrier")]
