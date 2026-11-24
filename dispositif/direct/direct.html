@@ -20,12 +20,12 @@ table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:8px 10px
 <section><h2>Équipe de veille</h2><div class="equipe" id="equipe"></div></section>
 <section><h2>Équipe administrative</h2><p id="etatr" style="margin-bottom:12px"></p><div class="equipe trois" id="equiper"></div></section>
 <section id="sujet"></section>
-<div class="deux"><section><h2>Les objections d’Alfred</h2><div id="revues"></div></section><section><h2>Le fil du passage</h2><ol id="journal"></ol></section></div>
+<div class="deux"><section><h2>Les objections de Velma</h2><div id="revues"></div></section><section><h2>Le fil du passage</h2><ol id="journal"></ol></section></div>
 <section id="lettre"><h2>Les objections sur la lettre de la semaine</h2><div id="revuesr"></div></section>
 <section><h2>Les derniers passages</h2><div class="t"><table><thead><tr><th>Date</th><th>Issue</th><th>Billet ou motif</th><th>Versions</th></tr></thead><tbody id="hist"></tbody></table></div></section>
 </main><script>
-const A={nestor:['Nestor','Cherche','vert','vs'],jarvis:['Jarvis','Choisit','bleu','bs'],r2d2:['R2-D2','Vérifie','vert','vs'],watson:['Watson','Écrit','ambre','as'],alfred:['Alfred','Conteste','rouge','rs']};
-const B={moneypenny:['Moneypenny','Résume la semaine','ambre','as'],alfred:['Alfred','Conteste la lettre','rouge','rs'],hedwige:['Hedwige','Met en page','bleu','bs']};
+const A={nestor:['Nestor','Cherche','vert','vs'],moneypenny:['Moneypenny','Choisit','bleu','bs'],r2d2:['R2-D2','Vérifie','vert','vs'],watson:['Watson','Écrit','ambre','as'],velma:['Velma','Conteste','rouge','rs']};
+const B={alfred:['Alfred','Résume la semaine','ambre','as'],velma:['Velma','Conteste la lettre','rouge','rs'],hedwige:['Hedwige','Met en page','bleu','bs']};
 const E={publie:'Publié',abandon:'Rien publié',echec:'Échec',interrompu:'Interrompu',en_cours:'En cours',essai:'Essai réussi'};
 const $=i=>document.getElementById(i);function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
 const jour=i=>i.slice(8,10)+'/'+i.slice(5,7)+' à '+i.slice(11).replace('h',' h ');

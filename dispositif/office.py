@@ -66,10 +66,10 @@ f = tache("nestor", "Veille du jour", "Propose 4 à 8 ressources récentes. rech
 f = [x for x in f if isinstance(x, dict) and x.get("url") and cle(x["url"]) not in vus]
 (D / "fiches.json").write_text(json.dumps(f, ensure_ascii=False, indent=1)); log(len(f), "fiches nouvelles")
 if not f: fin(0, "Aucune ressource nouvelle.")
-s = tache("jarvis", "Choix du sujet", "Lis fiches.json et choisis. JSON : {retenu: bool, angle, urls: [1 à 3 adresses tirées de fiches.json], raison}.", "selection.json", 10)
+s = tache("moneypenny", "Choix du sujet", "Lis fiches.json et choisis. JSON : {retenu: bool, angle, urls: [1 à 3 adresses tirées de fiches.json], raison}.", "selection.json", 10)
 urls = [u for u in s.get("urls", []) if cle(u) in {cle(x["url"]) for x in f}]
 with open(L / "deja_vu.txt", "a") as o: o.write("".join("\n" + x["url"] for x in f))
-if not s.get("retenu") or not urls: fin(0, "Jarvis n'a rien retenu : " + str(s.get("raison")))
+if not s.get("retenu") or not urls: fin(0, "Moneypenny n'a rien retenu : " + str(s.get("raison")))
 v = tache("r2d2", "Vérification scientifique", "Sources retenues : " + ", ".join(urls) + ". Pour une adresse HAL, lis seulement son champ resume dans recherche.json, n'ouvre pas la page, et note dans methode que seul le résumé a été lu. JSON : {affirmations: [{texte, url, extrait}], methode: [{url, type, limites}], ecarte: [{quoi, pourquoi}]}. 4 à 12 affirmations.", "verification.json", 25)
 cache, ok, ko = {}, [], []
 for a in v.get("affirmations", []):
@@ -84,12 +84,12 @@ for n in (1, 2, 3):
     b = tache("watson", f"Rédaction, version {n}", "À partir de valide.json uniquement, écris billet.html (corps HTML, sans titre), puis meta.json : {titre, extrait (250 caractères au plus), tags: [..]}. Si ces fichiers existent, lis-les puis remplace-les." + objections, "meta.json", 15)
     if not (D / "billet.html").exists(): fin(1, "billet.html absent.")
     shutil.copy(D / "billet.html", D / f"billet-v{n}.html")
-    r = tache("alfred", f"Revue adversariale {n}", "Confronte billet.html et meta.json à valide.json. JSON : {verdict: \"accepte\"|\"corriger\"|\"rejete\", objections: [{gravite: \"majeure\"|\"mineure\", phrase, probleme, correction}]}.", f"revue-{n}.json", 15)
-    verdict = r.get("verdict"); log("Alfred :", verdict, len(r.get("objections", [])), "objection(s)")
+    r = tache("velma", f"Revue adversariale {n}", "Confronte billet.html et meta.json à valide.json. JSON : {verdict: \"accepte\"|\"corriger\"|\"rejete\", objections: [{gravite: \"majeure\"|\"mineure\", phrase, probleme, correction}]}.", f"revue-{n}.json", 15)
+    verdict = r.get("verdict"); log("Velma :", verdict, len(r.get("objections", [])), "objection(s)")
     if verdict in ("accepte", "rejete"): break
     objections = f" Corrige selon revue-{n}.json : traite chaque objection majeure."
 (D / "decision.json").write_text(json.dumps({"verdict": verdict, "versions": n}))
 if verdict != "accepte":
-    tache("jarvis", "Abandon du sujet", "Alfred n'a pas accepté le billet. Lis les revues et explique la raison en 5 lignes.", "abandon.md", 10); fin(0, "Sujet abandonné, voir abandon.md.")
+    tache("moneypenny", "Abandon du sujet", "Velma n'a pas accepté le billet. Lis les revues et explique la raison en 5 lignes.", "abandon.md", 10); fin(0, "Sujet abandonné, voir abandon.md.")
 tache("watson", "Publication", f"Exécute une seule fois : python3 {L}/publier.py {D}\nLa commande écrit elle-même publie.json. Ne modifie rien.", "publie.json", 10)
 fin(0, "Publié : " + (D / "publie.json").read_text().strip())

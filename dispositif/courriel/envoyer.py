@@ -17,16 +17,16 @@ def signature():
     """Signature fixe : elle ne dépend ni des agents ni du courrier. Les liens viennent de la configuration."""
     e, liens = html.escape, [(n, c.get(k, "").strip()) for n, k in (("Lire le blog", "lien_blog"), ("Suivre l'équipe en direct", "lien_direct"), ("Découvrir le projet", "lien_projet"))]
     liens = [(n, u) for n, u in liens if re.match(r"https?://[^\s\"<>]+$", u)]
-    T = ["Moneypenny", "Rédactrice de la lettre de la semaine, agent d'IA", "", "PAPN, Pôle des Agents Pédagogiques Numériques", "Laboratoire pédagogique, Centrale Lille", "",
-         "Relecture : Alfred. Mise en page : Hedwige. Veille : Nestor."] + [f"{n} : {u}" for n, u in liens]
+    T = ["Alfred", "Rédacteur de la lettre de la semaine, agent d'IA", "", "PAPN, Pôle des Agents Pédagogiques Numériques", "Laboratoire pédagogique, Centrale Lille", "",
+         "Relecture : Velma. Mise en page : Hedwige. Veille : Nestor."] + [f"{n} : {u}" for n, u in liens]
     L = " &nbsp;|&nbsp; ".join(f'<a href="{e(u, quote=True)}" style="color:#1C5D73;font-weight:bold;text-decoration:none">{e(n)}</a>' for n, u in liens)
     H = f"""<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
 <td width="5" style="background:#1C5D73;font-size:0;line-height:0">&nbsp;</td><td style="padding:2px 0 2px 18px">
-<div style="font:bold 22px/1.25 {SERIF};color:#16242A">Moneypenny</div>
-<div style="font:15px/1.5 {SANS};color:#526268">Rédactrice de la lettre de la semaine, agent d'IA</div>
+<div style="font:bold 22px/1.25 {SERIF};color:#16242A">Alfred</div>
+<div style="font:15px/1.5 {SANS};color:#526268">Rédacteur de la lettre de la semaine, agent d'IA</div>
 <div style="font:bold 15px/1.5 {SANS};color:#1C5D73;padding-top:12px">PAPN, Pôle des Agents Pédagogiques Numériques</div>
 <div style="font:15px/1.5 {SANS};color:#16242A">Laboratoire pédagogique, Centrale Lille</div>
-<div style="font:13px/1.5 {SANS};color:#526268;padding-top:12px">Relecture : Alfred. Mise en page : Hedwige. Veille : Nestor.</div>
+<div style="font:13px/1.5 {SANS};color:#526268;padding-top:12px">Relecture : Velma. Mise en page : Hedwige. Veille : Nestor.</div>
 <div style="font:14px/1.9 {SANS};padding-top:6px">{L}</div></td></tr></table>"""
     return T, H
 
@@ -47,7 +47,7 @@ def message(d):
             liens += f'<tr><td style="padding:10px 0 0;font:15px/1.45 {SANS}"><a href="{e(u, quote=True)}" style="color:#1C5D73;font-weight:bold">{e(t)}</a><br><span style="color:{teinte};font-size:13px">{e(n)}</span></td></tr>'
         fond = "background:#DCEBF1;" if not k else "border-top:1px solid #D2DCDB;"
         H += f'<tr><td style="{fond}padding:26px 32px"><h2 style="margin:0 0 12px;font:bold 21px/1.3 {SERIF};color:#16242A">{e(b["titre"])}</h2>{par(b["texte"])}<table role="presentation" width="100%" cellpadding="0" cellspacing="0">{liens}</table></td></tr>'
-    pied = ["Vert : billet publié, accepté par Alfred, l'agent relecteur. Ambre : ressource seulement repérée par Nestor, à vérifier avant de s'en servir.",
+    pied = ["Vert : billet publié, accepté par Velma, la contradictrice. Ambre : ressource seulement repérée par Nestor, à vérifier avant de s'en servir.",
             "Cette lettre est produite par des agents d'IA, qui peuvent se tromper. Elle est envoyée automatiquement par un script, une fois par semaine."]
     sig_t, sig_h = signature()
     page = f"""<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{e(objet)}</title></head>

@@ -244,7 +244,7 @@ svg .box-r{fill:var(--rose-soft);stroke:var(--rose);stroke-width:1.2}
 svg .edge-r{stroke:var(--rose);stroke-width:1.5;fill:none}
 .tag.contre{background:var(--rose-soft);color:var(--rose)}
 .agents{display:grid;gap:0}
-.agents article{display:grid;grid-template-columns:9rem 1fr 1fr;gap:6px 22px;padding:18px 0;border-top:1px solid var(--line)}
+.agents article{display:grid;grid-template-columns:14rem 1fr 1fr;gap:6px 22px;padding:18px 0;border-top:1px solid var(--line)}
 .agents p{margin:0;font-size:.95rem}.agents h3{font-size:1.3rem}
 @media (max-width:700px){.agents article{grid-template-columns:1fr}}
 .loupe{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}

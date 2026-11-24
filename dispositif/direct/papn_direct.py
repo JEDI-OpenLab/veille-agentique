@@ -9,7 +9,7 @@ SEM = DOS.parent / "semaines"
 PROFILS = Path(os.environ.get("PAPN_PROFILS", Path.home() / ".hermes/profiles"))
 PORT = int(os.environ.get("PAPN_PORT", "8770"))
 PAGE = (Path(__file__).parent / "direct.html").read_bytes()
-AGENTS = ["nestor", "jarvis", "r2d2", "watson", "alfred"]
+AGENTS = ["nestor", "moneypenny", "r2d2", "watson", "velma"]
 NOM = re.compile(r"^\d{4}-\d\d-\d\d-\d\dh\d\d$")
 
 def lire(d, f, defaut=None):
@@ -52,7 +52,15 @@ def suivre(noms, lignes, debut, fin, en_marche):
         ag[a]["reels"], ag[a]["bascules"] = modeles(a, debut, fin)
         ag[a]["etat"] = "travaille" if en_marche and qui == a else "fait" if ag[a]["fait"] else "attend"
     return ag
+CHANGEMENT = datetime(2026, 11, 24, 12, 41).timestamp()  # redistribution des noms
+ANCIENS = {"dossiers": {"jarvis": "moneypenny", "alfred": "velma"}, "semaines": {"moneypenny": "alfred", "alfred": "velma"}}
 def fil(d):
+    r = fil_brut(d)
+    try: ancien = r and (d / "journal.txt").stat().st_mtime < CHANGEMENT
+    except OSError: ancien = False
+    n = ANCIENS.get(d.parent.name, {}) if ancien else {}
+    return [(h, " ".join([n.get(t.split(" ", 1)[0], t.split(" ", 1)[0])] + t.split(" ", 1)[1:]).replace("Alfred :", "Velma :") if n else t) for h, t in r]
+def fil_brut(d):
     return [(m.group(1), m.group(2)) for m in (re.match(r"(\d\d:\d\d:\d\d) (.*)", l) for l in (lire(d, "journal.txt", "") or "").splitlines()) if m]
 def revues(d):
     r = []
@@ -75,7 +83,7 @@ def prochain(nom, utilisateur=True):
 def recap():
     """Dernier récapitulatif de l'équipe administrative."""
     ds = [d for d in SEM.glob("*") if d.is_dir() and re.fullmatch(r"\d{4}-S\d\d(-essai-\d\dh\d\d|-essai-\d+h\d\d)?", d.name) and (d / "semaine.json").exists()] if SEM.exists() else []
-    noms, vide = ["moneypenny", "alfred", "hedwige"], {"id": None}
+    noms, vide = ["alfred", "velma", "hedwige"], {"id": None}
     if not ds: return {**vide, "agents": {a: {"prevu": prevu(a), "reels": {}, "bascules": [], "fait": 0, "tache": None, "etat": "attend"} for a in noms}}
     d = max(ds, key=lambda x: (x / "semaine.json").stat().st_mtime); l = fil(d); bilan = (lire(d, "bilan.txt") or "").strip()
     jour = datetime.fromtimestamp((d / "semaine.json").stat().st_mtime); pub = lire(d, "publie.json") or {}

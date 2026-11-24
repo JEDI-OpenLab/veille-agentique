@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Récapitulatif hebdomadaire : Moneypenny écrit, Alfred conteste, Hedwige met en page.
+"""Récapitulatif hebdomadaire : Alfred écrit, Velma conteste, Hedwige met en page.
 Options : --glissant (7 derniers jours, aujourd'hui compris) ; --essai (ne publie pas, ne dépose rien)."""
 import fcntl, html, json, re, subprocess, sys, time
 from datetime import date, datetime, timedelta
@@ -55,7 +55,7 @@ for d in sorted((L / "dossiers").glob("20*")):
     p, m, pris = lire(d / "publie.json") or {}, lire(d / "meta.json", {}) or {}, []
     if p.get("ok") and p.get("status") == "published":
         v = lire(d / "valide.json", {}) or {}; pris = [u for u in (lire(d / "selection.json", {}) or {}).get("urls", []) if re.match(r"https?://", u)]
-        billets.append({"id": f"B{len(billets)+1}", "statut": "publié, accepté par Alfred", "date": str(j), "titre": p.get("title") or m.get("titre"), "extrait": m.get("extrait"), "url": p.get("url"), "sources": pris, "affirmations": [x.get("texte") for x in v.get("affirmations", [])]})
+        billets.append({"id": f"B{len(billets)+1}", "statut": "publié, accepté par Velma", "date": str(j), "titre": p.get("title") or m.get("titre"), "extrait": m.get("extrait"), "url": p.get("url"), "sources": pris, "affirmations": [x.get("texte") for x in v.get("affirmations", [])]})
     elif (d / "bilan.txt").exists(): abandons += 1
     for f in lire(d / "fiches.json", []) or []:
         u = str(f.get("url", ""))
@@ -76,15 +76,15 @@ def bon_recap(r):
 def bonne_revue(r): assert r.get("verdict") in ("accepte", "corriger", "rejete") and isinstance(r.get("objections"), list), "verdict et objections attendus"
 suite = ""
 for n in (1, 2, 3):
-    r = tache("moneypenny", f"Récapitulatif, version {n}", "Lis semaine.json. Le titre ne répète pas les dates, elles figurent déjà en tête. JSON : {titre, intro, themes: [{titre, texte, refs: [identifiants]}]}. 1 à 4 thèmes, 600 mots au plus. Présente les R comme repérés, non vérifiés." + suite, "recap.json", bon_recap)
-    if not r: fin(1, "Échec : Moneypenny n'a pas rendu un récapitulatif valable.")
-    v = tache("alfred", f"Revue du récapitulatif {n}", "Confronte recap.json à semaine.json, ta seule base factuelle ici. Les règles de longueur et d'accroche des billets ne s'appliquent pas. JSON : {verdict: \"accepte\"|\"corriger\"|\"rejete\", objections: [{gravite: \"majeure\"|\"mineure\", phrase, probleme, correction}]}.", f"revue-{n}.json", bonne_revue)
-    if not v: fin(1, "Échec : Alfred n'a pas rendu de revue valable.")
+    r = tache("alfred", f"Récapitulatif, version {n}", "Lis semaine.json. Le titre ne répète pas les dates, elles figurent déjà en tête. JSON : {titre, intro, themes: [{titre, texte, refs: [identifiants]}]}. 1 à 4 thèmes, 600 mots au plus. Présente les R comme repérés, non vérifiés." + suite, "recap.json", bon_recap)
+    if not r: fin(1, "Échec : Alfred n'a pas rendu un récapitulatif valable.")
+    v = tache("velma", f"Revue du récapitulatif {n}", "Confronte recap.json à semaine.json, ta seule base factuelle ici. Les règles de longueur et d'accroche des billets ne s'appliquent pas. JSON : {verdict: \"accepte\"|\"corriger\"|\"rejete\", objections: [{gravite: \"majeure\"|\"mineure\", phrase, probleme, correction}]}.", f"revue-{n}.json", bonne_revue)
+    if not v: fin(1, "Échec : Velma n'a pas rendu de revue valable.")
     maj = [o for o in v["objections"] if isinstance(o, dict) and "maj" in str(o.get("gravite"))]
-    ok = v["verdict"] == "accepte" or (v["verdict"] == "corriger" and not maj); log("Alfred :", v["verdict"], len(maj), "objection(s) majeure(s)")
+    ok = v["verdict"] == "accepte" or (v["verdict"] == "corriger" and not maj); log("Velma :", v["verdict"], len(maj), "objection(s) majeure(s)")
     if ok or v["verdict"] == "rejete": break
     suite = f" Corrige selon revue-{n}.json : traite chaque objection majeure, sans ajouter de fait."
-if not ok: fin(0, "Récapitulatif non accepté par Alfred.")
+if not ok: fin(0, "Récapitulatif non accepté par Velma.")
 
 # Les blocs sont numérotés : Hedwige les ordonne, elle ne peut pas en changer le texte.
 tout = {x["id"]: x for x in billets + sem["ressources"]}
